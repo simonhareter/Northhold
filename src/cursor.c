@@ -1,5 +1,7 @@
 #include "cursor.h"
+#include "button.h"
 #include <raylib.h>
+#include <stddef.h>
 
 void update_cursor(bool is_hovering_interactive_element)
 {
@@ -11,4 +13,34 @@ void update_cursor(bool is_hovering_interactive_element)
   {
     SetMouseCursor(MOUSE_CURSOR_DEFAULT);
   }
+}
+
+bool is_mouse_over_button(Rectangle rec)
+{
+  Vector2 mouse_pos = {GetMouseX(), GetMouseY()};
+  return CheckCollisionPointRec(mouse_pos, rec);
+}
+
+bool is_mouse_over_any_button(Button *options, size_t size)
+{
+  for (size_t i = 0; i < size; i++)
+  {
+    if (is_mouse_over_button(options[i].rec))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+int which_button_pressed(Button *options, size_t size)
+{
+  for (size_t i = 0; i < size; i++)
+  {
+    if (is_mouse_over_button(options[i].rec) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+    {
+      return i;
+    }
+  }
+  return -1;
 }

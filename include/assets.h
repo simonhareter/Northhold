@@ -15,6 +15,7 @@ typedef struct
 } Assets;
 
 void load_assets(Assets *assets);
-void load_tile_assets(TileAssets *tileAssets);
-
+void load_tile_assets(TileAssets *tile_assets);
+void unload_assets(Assets *assets);
+void unload_tile_assets(TileAssets *tile_assets);
 #endif

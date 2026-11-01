@@ -1,5 +1,6 @@
 #include "config.h"
 #include "game.h"
+#include "input.h"
 #include <raylib.h>
 
 //------------------------------------------------------------------------------------
@@ -9,6 +10,7 @@ int main(void)
 {
 
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Stronghold");
+  SetExitKey(KEY_F8);
   SetTargetFPS(60);
 
   Game game;
@@ -16,6 +18,7 @@ int main(void)
 
   while (!WindowShouldClose() && !game.should_exit)
   {
+    handle_input(&game);
     update_game(&game);
 
     BeginDrawing();
@@ -26,7 +29,7 @@ int main(void)
     EndDrawing();
   }
 
-  // unloadGame();
+  unload_game(&game);
   CloseWindow(); // Close window and OpenGL context
 
   return 0;

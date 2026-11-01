@@ -1,69 +1,43 @@
 #include "menu.h"
+#include "button.h"
 #include "config.h"
 #include "cursor.h"
 #include "game.h"
 #include <raylib.h>
 #include <raymath.h>
+#include <stddef.h>
 
 void init_menu(Game *game)
 {
-  float menu_width = 300.0f;
-  float menu_height = 250.0f;
+  float menu_width = 300;
+  float menu_height = 250;
 
   float rec_width = menu_width;
-  float rec_height = 50.0f;
+  float rec_height = 50;
   float rec_pos_x = SCREEN_WIDTH / 2.0f - rec_width / 2.0f;
   float rec_pos_y = SCREEN_HEIGHT / 2.0f - menu_height / 2.0f;
 
   float space_height = rec_height;
 
-  game->menu.options[0] = (MenuOption){{rec_pos_x, rec_pos_y, rec_width, rec_height}, "Play"};
+  game->menu.options[0] = (Button){{rec_pos_x, rec_pos_y, rec_width, rec_height}, "Play"};
   game->menu.options[1] =
-      (MenuOption){{rec_pos_x, rec_pos_y + rec_height + space_height, rec_width, rec_height}, "Settings"};
+      (Button){{rec_pos_x, rec_pos_y + rec_height + space_height, rec_width, rec_height}, "Settings"};
   game->menu.options[2] =
-      (MenuOption){{rec_pos_x, rec_pos_y + rec_height * 2 + space_height * 2, rec_width, rec_height}, "Exit"};
+      (Button){{rec_pos_x, rec_pos_y + rec_height * 2 + space_height * 2, rec_width, rec_height}, "Exit"};
   game->menu.option_count = 3;
-}
-
-bool is_mouse_over_button(Rectangle rec)
-{
-  Vector2 mouse_pos = {GetMouseX(), GetMouseY()};
-  return CheckCollisionPointRec(mouse_pos, rec);
-}
-
-int which_button_pressed(Game *game)
-{
-  for (int i = 0; i < MENU_ITEM_COUNT; i++)
-  {
-    if (is_mouse_over_button(game->menu.options[i].rec) && IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
-    {
-      return i;
-    }
-  }
-  return -1;
-}
-
-bool update_menu_cursor(Game *game)
-{
-  for (int i = 0; i < MENU_ITEM_COUNT; i++)
-  {
-    if (is_mouse_over_button(game->menu.options[i].rec))
-    {
-      return true;
-    }
-  }
-  return false;
 }
 
 void update_menu(Game *game)
 {
-  bool hovering_button = update_menu_cursor(game);
+  size_t size = sizeof(game->menu.options) / sizeof(game->menu.options[0]);
+  bool hovering_button = is_mouse_over_any_button(game->menu.options, size);
   update_cursor(hovering_button);
 
-  switch (which_button_pressed(game))
+  switch (which_button_pressed(game->menu.options, size))
   {
     case 0:
       game->state = GAME_STATE_PLAYING;
+      SetMouseCursor(MOUSE_CURSOR_DEFAULT);
       break;
     case 1:
       game->state = GAME_STATE_SETTINGS;
@@ -76,12 +50,12 @@ void update_menu(Game *game)
 
 void draw_menu(Game *game)
 {
-  Font font = GetFontDefault();
-  float font_size = 30.;
-  float spacing = font_size * 0.1f;
-  float h_align = 0.5f, v_align = 0.5f;
+  Font font = game->font;
+  float font_size = 30;
+  float spacing = font_size * 0.1;
+  float h_align = 0.5, v_align = 0.5;
 
-  MenuOption *options = game->menu.options;
+  Button *options = game->menu.options;
   int size = game->menu.option_count;
 
   for (int i = 0; i < size; i++)

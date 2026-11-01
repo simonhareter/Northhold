@@ -13,7 +13,8 @@ SRC = main.c \
       src/input.c \
 	  src/menu.c \
 	  src/settings.c \
-	  src/cursor.c
+	  src/cursor.c \
+	  src/pause_menu.c
 
 OBJ = $(patsubst %.c,build/%.o,$(SRC))
 DEP = $(OBJ:.o=.d)
