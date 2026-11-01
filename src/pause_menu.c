@@ -1,4 +1,5 @@
 #include "pause_menu.h"
+#include "button.h"
 #include "config.h"
 #include "cursor.h"
 #include "game.h"
@@ -31,17 +32,16 @@ void init_pause_menu(Game *game)
   float rec_pos_x = SCREEN_WIDTH / 2.0f - rec_width / 2.0f;
   float rec_pos_y = SCREEN_HEIGHT / 2.0f - menu_box_height / 2.0f + rec_height * 1.5f;
 
-  Rectangle resume = {rec_pos_x, rec_pos_y, rec_width, rec_height};
-  pause_menu.options[PAUSE_MENU_RESUME] = (Button){resume, "Resume"};
+  const char *button_names[PAUSE_MENU_COUNT] = {"Resume", "Save", "Settings", "Exit"};
 
-  Rectangle save = {rec_pos_x, rec_pos_y + rec_height * 2, rec_width, rec_height};
-  pause_menu.options[PAUSE_MENU_SAVE] = (Button){save, "Save"};
-
-  Rectangle settings = {rec_pos_x, rec_pos_y + rec_height * 4, rec_width, rec_height};
-  pause_menu.options[PAUSE_MENU_SETTINGS] = (Button){settings, "Settings"};
-
-  Rectangle exit = {rec_pos_x, rec_pos_y + rec_height * 6, rec_width, rec_height};
-  pause_menu.options[PAUSE_MENU_EXIT] = (Button){exit, "Exit"};
+  for (int i = 0; i < PAUSE_MENU_COUNT; i++)
+  {
+    Rectangle curr_outline = {rec_pos_x - BUTTON_OUTLINE_THICKNESS,
+                              rec_pos_y - BUTTON_OUTLINE_THICKNESS + rec_height * (i * 2),
+                              rec_width + BUTTON_OUTLINE_THICKNESS * 2, rec_height + BUTTON_OUTLINE_THICKNESS * 2};
+    Rectangle curr_button_rec = {rec_pos_x, rec_pos_y + rec_height * (i * 2), rec_width, rec_height};
+    pause_menu.options[i] = (Button){curr_outline, curr_button_rec, button_names[i]};
+  }
 
   game->pause_menu = pause_menu;
 }
@@ -65,6 +65,8 @@ void update_pause_menu(Game *game)
       game->state = GAME_STATE_SETTINGS;
       break;
     case 3:
+      StopMusicStream(game->menu_music);
+      PlayMusicStream(game->menu_music);
       game->state = GAME_STATE_MENU;
       break;
     default:
@@ -79,22 +81,21 @@ void draw_pause_menu(Game *game)
 {
   // BOX
   Font font = game->font;
-  float font_size = 30;
-  float spacing = font_size * 0.1;
+  float spacing = FONT_SIZE * 0.1;
   float h_align = 0.5, v_align = 0.5;
 
-  DrawRectangleRec(game->pause_menu.menu_box, Fade(BLACK, 0.5f));
+  DrawRectangleRec(game->pause_menu.menu_box, Fade(BLACK, 0.8f));
 
   // TITLE
-  DrawRectangleRec(game->pause_menu.title_box, BLUE);
+  DrawRectangleRec(game->pause_menu.title_box, BUTTON_TITLE_COLOR);
 
   const char *title_text = game->pause_menu.pause_menu_title;
   Rectangle title_rec = game->pause_menu.title_box;
-  Vector2 title_size = MeasureTextEx(font, title_text, font_size, spacing);
+  Vector2 title_size = MeasureTextEx(font, title_text, FONT_SIZE, spacing);
   Vector2 title_pos = (Vector2){title_rec.x + Lerp(0.0f, title_rec.width - title_size.x, h_align),
                                 title_rec.y + Lerp(0.0f, title_rec.height - title_size.y, v_align)};
 
-  DrawTextEx(font, game->pause_menu.pause_menu_title, title_pos, font_size, spacing, BLACK);
+  DrawTextEx(font, game->pause_menu.pause_menu_title, title_pos, FONT_SIZE, spacing, BUTTON_TITLE_TEXT_COLOR);
 
   // PAUSE MENU OPTIONS
   for (int i = 0; i < PAUSE_MENU_COUNT; i++)
@@ -102,12 +103,12 @@ void draw_pause_menu(Game *game)
     Rectangle rec = game->pause_menu.options[i].rec;
     const char *text = game->pause_menu.options[i].text;
 
-    DrawRectangleRec(rec, BLUE);
+    DrawRectangleRec(rec, BUTTON_COLOR);
 
-    Vector2 text_size = MeasureTextEx(font, text, font_size, spacing);
+    Vector2 text_size = MeasureTextEx(font, text, FONT_SIZE, spacing);
     Vector2 text_pos = (Vector2){rec.x + Lerp(0.0f, rec.width - text_size.x, h_align),
                                  rec.y + Lerp(0.0f, rec.height - text_size.y, v_align)};
 
-    DrawTextEx(font, text, text_pos, font_size, spacing, BLACK);
+    DrawTextEx(font, text, text_pos, FONT_SIZE, spacing, BUTTON_TEXT_COLOR);
   }
 }

@@ -2,6 +2,7 @@
 #include "assets.h"
 #include "audio.h"
 #include "config.h"
+#include "cursor.h"
 #include "menu.h"
 #include "pause_menu.h"
 #include "renderer.h"
@@ -23,7 +24,8 @@ void init_game(Game *game)
                             .rotation = 0.0f,
                             .zoom = 1.0f};
 
-  game->font = GetFontDefault();
+  game->font = LoadFontEx("../assets/fonts/static/EBGaramond-Medium.ttf", FONT_SIZE, NULL, 0);
+  game->menu.title_font = LoadFontEx("../assets/fonts/static/EBGaramond-Bold.ttf", FONT_SIZE * 4, NULL, 0);
 
   load_world(&game->world);
   load_assets(&game->assets);

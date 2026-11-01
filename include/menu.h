@@ -10,6 +10,7 @@ typedef struct Game Game;
 typedef enum
 {
   MENU_ITEM_PLAY,
+  MENU_ITEM_LOAD,
   MENU_ITEM_SETTINGS,
   MENU_ITEM_EXIT,
   MENU_ITEM_COUNT
@@ -18,7 +19,9 @@ typedef enum
 typedef struct
 {
   Button options[MENU_ITEM_COUNT];
-  int option_count;
+  const char *title;
+  Texture2D background;
+  Font title_font;
 } Menu;
 
 void init_menu(Game *game);
