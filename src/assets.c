@@ -27,5 +27,5 @@ void unload_tile_assets(TileAssets *tile_assets)
   {
     UnloadTexture(tile_assets->terrain[i]);
   }
-  TraceLog(LOG_INFO, "Unloaded tile assets");
+  TraceLog(LOG_INFO, "Unloaded tile assets successfully");
 }

@@ -9,6 +9,8 @@
 
 void init_menu(Game *game)
 {
+  PlayMusicStream(game->menu_music);
+
   float menu_width = 300;
   float menu_height = 250;
 
@@ -29,6 +31,8 @@ void init_menu(Game *game)
 
 void update_menu(Game *game)
 {
+  UpdateMusicStream(game->menu_music);
+
   size_t size = sizeof(game->menu.options) / sizeof(game->menu.options[0]);
   bool hovering_button = is_mouse_over_any_button(game->menu.options, size);
   update_cursor(hovering_button);

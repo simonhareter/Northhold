@@ -25,6 +25,7 @@ typedef struct Game
   World world;
   Assets assets;
   Camera2D camera;
+  Music menu_music;
   bool should_exit;
 } Game;
 

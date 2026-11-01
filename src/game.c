@@ -1,5 +1,6 @@
 #include "game.h"
 #include "assets.h"
+#include "audio.h"
 #include "config.h"
 #include "menu.h"
 #include "pause_menu.h"
@@ -10,6 +11,9 @@
 
 void init_game(Game *game)
 {
+  InitAudioDevice();
+  play_menu_music(game);
+
   init_menu(game);
   init_pause_menu(game);
   game->should_exit = false;
@@ -72,6 +76,7 @@ void draw_current_state(Game *game)
 void unload_game(Game *game)
 {
   unload_assets(&game->assets);
+  unload_music(game);
 
   TraceLog(LOG_INFO, "Game shutdown complete");
 }
