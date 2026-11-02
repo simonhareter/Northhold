@@ -17,6 +17,8 @@ void init_game(Game *game)
 
   init_menu(game);
   init_pause_menu(game);
+  init_settings(game);
+
   game->should_exit = false;
   game->state = GAME_STATE_MENU;
   game->camera = (Camera2D){.target = {WORLD_WIDTH * TILE_SIZE / 2.0f, WORLD_HEIGHT * TILE_SIZE / 2.0f},
@@ -70,7 +72,7 @@ void draw_current_state(Game *game)
       break;
 
     case GAME_STATE_SETTINGS:
-      // draw_settings(game);
+      draw_settings(game);
       break;
   }
 }

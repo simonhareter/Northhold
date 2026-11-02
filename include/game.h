@@ -4,6 +4,7 @@
 #include "assets.h"
 #include "menu.h"
 #include "pause_menu.h"
+#include "settings.h"
 #include "world.h"
 #include <raylib.h>
 #include <stdbool.h>
@@ -20,6 +21,7 @@ typedef struct Game
 {
   Font font;
   Menu menu;
+  Settings settings;
   PauseMenu pause_menu;
   GameState state;
   World world;

@@ -83,8 +83,15 @@ void draw_menu(Game *game)
     Rectangle rec = options[i].rec;
     const char *text = options[i].text;
 
+    Color color = BUTTON_COLOR;
+
+    if (options[i].is_hovered)
+    {
+      color = BUTTON_COLOR_HOVERED;
+    }
+
     DrawRectangleRounded(outline, BUTTON_ROUNDNESS, BUTTON_SEGMENTS, BUTTON_OUTLINE_COLOR);
-    DrawRectangleRounded(rec, BUTTON_ROUNDNESS, BUTTON_SEGMENTS, BUTTON_COLOR);
+    DrawRectangleRounded(rec, BUTTON_ROUNDNESS, BUTTON_SEGMENTS, color);
 
     Vector2 text_size = MeasureTextEx(font, text, (float)FONT_SIZE, spacing);
     Vector2 text_pos = (Vector2){rec.x + Lerp(0.0f, rec.width - text_size.x, h_align),

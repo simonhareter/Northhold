@@ -27,7 +27,12 @@ bool is_mouse_over_any_button(Button *options, size_t size)
   {
     if (is_mouse_over_button(options[i].rec))
     {
+      options[i].is_hovered = true;
       return true;
+    }
+    else
+    {
+      options[i].is_hovered = false;
     }
   }
   return false;
