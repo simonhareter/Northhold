@@ -12,11 +12,26 @@ typedef enum
   SETTINGS_COUNT
 } SettingsItem;
 
+typedef enum
+{
+  BOX,
+  TITLE,
+  CANCEL,
+  SAVE,
+  SETTINGS_UI_ELEMENTS_COUNT
+} SettingsUiElements;
+
+typedef struct 
+{
+    const char *name;
+    int value;
+} Setting;
+
 typedef struct
 {
-  Rectangle box;
+  Button ui_elements[SETTINGS_UI_ELEMENTS_COUNT];
   int volume;
-  Button options[SETTINGS_COUNT];
+  Setting options[SETTINGS_COUNT];
 } Settings;
 
 void init_settings(Game *game);

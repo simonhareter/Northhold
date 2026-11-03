@@ -8,6 +8,11 @@ void play_menu_music(Game *game)
   game->menu_music.looping = true;
 }
 
+void update_menu_music(Game *game)
+{
+  UpdateMusicStream(game->menu_music);
+}
+
 void unload_music(Game *game)
 {
   UnloadMusicStream(game->menu_music);

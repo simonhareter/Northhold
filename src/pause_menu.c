@@ -48,11 +48,11 @@ void init_pause_menu(Game *game)
 
 void update_pause_menu(Game *game)
 {
-  size_t size = sizeof(game->pause_menu.options) / sizeof(game->pause_menu.options[0]);
-  bool hovering_button = is_mouse_over_any_button(game->pause_menu.options, size);
+  Button *options = game->pause_menu.options;
+  bool hovering_button = is_mouse_over_any_button(options, PAUSE_MENU_COUNT);
   update_cursor(hovering_button);
 
-  switch (which_button_pressed(game->pause_menu.options, size))
+  switch (which_button_pressed(options, PAUSE_MENU_COUNT))
   {
     case 0:
       game->state = GAME_STATE_PLAYING;

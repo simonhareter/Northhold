@@ -39,6 +39,7 @@ void update_game(Game *game)
   {
     case GAME_STATE_MENU:
       update_menu(game);
+      update_menu_music(game);
       break;
     case GAME_STATE_PLAYING:
       break;
@@ -47,6 +48,7 @@ void update_game(Game *game)
       break;
     case GAME_STATE_SETTINGS:
       update_settings(game);
+      update_menu_music(game);
       break;
   }
 }
@@ -56,7 +58,13 @@ void draw_current_state(Game *game)
   switch (game->state)
   {
     case GAME_STATE_MENU:
+    case GAME_STATE_SETTINGS:
       draw_menu(game);
+
+      if (game->state == GAME_STATE_SETTINGS)
+      {
+        draw_settings(game);
+      }
       break;
 
     case GAME_STATE_PLAYING:
@@ -69,10 +77,6 @@ void draw_current_state(Game *game)
       {
         draw_pause_menu(game);
       }
-      break;
-
-    case GAME_STATE_SETTINGS:
-      draw_settings(game);
       break;
   }
 }

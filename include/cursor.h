@@ -8,6 +8,6 @@
 
 void update_cursor(bool is_hovering_interactive_element);
 bool is_mouse_over_button(Rectangle rec);
-bool is_mouse_over_any_button(Button *options, size_t size);
-int which_button_pressed(Button *options, size_t size);
+bool is_mouse_over_any_button(Button *options, int size);
+int which_button_pressed(Button *options, int size);
 #endif

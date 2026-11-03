@@ -5,6 +5,7 @@
 #include "game.h"
 #include <raylib.h>
 #include <raymath.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 
@@ -32,19 +33,19 @@ void init_menu(Game *game)
                               rec_pos_y - BUTTON_OUTLINE_THICKNESS + rec_height * i + space_height * i,
                               rec_width + BUTTON_OUTLINE_THICKNESS * 2, rec_height + BUTTON_OUTLINE_THICKNESS * 2};
     Rectangle curr_button_rec = {rec_pos_x, rec_pos_y + rec_height * i + space_height * i, rec_width, rec_height};
-    game->menu.options[i] = (Button){curr_outline, curr_button_rec, button_names[i]};
+    game->menu.options[i] = (Button){curr_outline,         curr_button_rec, button_names[i], false,
+                                     BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_ROUNDNESS};
   }
 }
 
 void update_menu(Game *game)
 {
-  UpdateMusicStream(game->menu_music);
+  Button *options = game->menu.options;
 
-  size_t size = sizeof(game->menu.options) / sizeof(game->menu.options[0]);
-  bool hovering_button = is_mouse_over_any_button(game->menu.options, size);
+  bool hovering_button = is_mouse_over_any_button(options, MENU_ITEM_COUNT);
   update_cursor(hovering_button);
 
-  switch (which_button_pressed(game->menu.options, size))
+  switch (which_button_pressed(options, MENU_ITEM_COUNT))
   {
     case 0:
       game->state = GAME_STATE_PLAYING;
@@ -54,6 +55,8 @@ void update_menu(Game *game)
       break;
     case 2:
       game->state = GAME_STATE_SETTINGS;
+      SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+      game->menu.options[2].is_hovered = false;
       break;
     case 3:
       game->should_exit = true;
