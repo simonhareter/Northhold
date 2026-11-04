@@ -9,6 +9,9 @@ typedef struct Game Game;
 typedef enum
 {
   SETTINGS_MUSIC_VOLUME,
+  SETTINGS_TEST1,
+  SETTINGS_TEST2,
+  SETTINGS_TEST3,
   SETTINGS_COUNT
 } SettingsItem;
 
@@ -21,10 +24,10 @@ typedef enum
   SETTINGS_UI_ELEMENTS_COUNT
 } SettingsUiElements;
 
-typedef struct 
+typedef struct
 {
-    const char *name;
-    int value;
+  const char *name;
+  int value;
 } Setting;
 
 typedef struct
@@ -32,6 +35,7 @@ typedef struct
   Button ui_elements[SETTINGS_UI_ELEMENTS_COUNT];
   int volume;
   Setting options[SETTINGS_COUNT];
+  Font font;
 } Settings;
 
 void init_settings(Game *game);

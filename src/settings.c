@@ -48,16 +48,20 @@ void init_settings(Game *game)
         (Button){outline, rects[i], button_names[i], false, button_outline_color[i], button_color[i], roundness};
   }
 
-  const char *option_names[SETTINGS_COUNT] = {"Music Volume"};
-  Setting music_volume = {option_names[0], 50};
-  game->settings.options[0] = music_volume;
+  const char *option_names[SETTINGS_COUNT] = {"Music Volume", "Test Option1", "Test Option4", "Test Option3"};
+  for (int i = 0; i < SETTINGS_COUNT; i++)
+  {
+    Setting option = {option_names[i], 50};
+    game->settings.options[i] = option;
+  }
 }
 
 void update_settings(Game *game)
 {
   // putting pointer to 3rd element (only 3rd and 4th are actually buttons to click)
   Button *buttons = &game->settings.ui_elements[2];
-  bool hovering_button = is_mouse_over_any_button(buttons, SETTINGS_UI_ELEMENTS_COUNT);
+  const int BUTTON_COUNT = 2;
+  bool hovering_button = is_mouse_over_any_button(buttons, BUTTON_COUNT);
   update_cursor(hovering_button);
 
   // 3 -> 0, 4 -> 1
@@ -102,6 +106,24 @@ void draw_settings(Game *game)
     DrawTextEx(game->font, text, text_pos, FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
   }
 
-  DrawTextEx(game->font, game->settings.options[0].name, (Vector2){SCREEN_WIDTH / 2.0f - 300.0f, SCREEN_HEIGHT / 2.0f},
-             FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
+  float box_height = game->settings.ui_elements[0].rec.height;
+  float rec_height = game->settings.ui_elements[TITLE].rec.height;
+  float option_height = SCREEN_HEIGHT / 2.0f - box_height / 2.0f + rec_height * 2.0f;
+  float option_start_pos = SCREEN_WIDTH / 2.0f - 300.0f;
+  float option_bar_start_pos = option_start_pos + 200;
+  float option_bar_width = SCREEN_WIDTH * 0.15625;
+
+  for (int i = 0; i < SETTINGS_COUNT; i++)
+  {
+    DrawTextEx(game->settings.font, game->settings.options[i].name,
+               (Vector2){option_start_pos, option_height + i * rec_height}, SETTINGS_FONT_SIZE, TEXT_SPACING,
+               BUTTON_TEXT_COLOR);
+
+    DrawLine(option_bar_start_pos, option_height + i * rec_height + 16, option_bar_start_pos + option_bar_width,
+             option_height + i * rec_height + 16, BUTTON_TITLE_COLOR);
+
+    DrawTextEx(game->settings.font, TextFormat("%d%%", game->settings.options[i].value),
+               (Vector2){option_start_pos + option_bar_width + 250, option_height + i * rec_height}, SETTINGS_FONT_SIZE,
+               TEXT_SPACING, BUTTON_TEXT_COLOR);
+  }
 }

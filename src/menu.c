@@ -7,13 +7,12 @@
 #include <raymath.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdio.h>
 
 void init_menu(Game *game)
 {
   PlayMusicStream(game->menu_music);
   game->menu.title = "Northhold";
-  game->menu.background = LoadTexture("../assets/title/background.png");
+  // game->menu.background = LoadTexture("../assets/title/background.png");
 
   float menu_width = 300;
   float menu_height = 250;
@@ -69,11 +68,11 @@ void draw_menu(Game *game)
   DrawTexture(game->menu.background, 0, 0, WHITE);
 
   Font font = game->font;
-  float spacing = FONT_SIZE * 0.1;
   float h_align = 0.5, v_align = 0.5;
 
-  float title_spacing = game->menu.title_font.baseSize * 0.05;
-  Vector2 title_size = MeasureTextEx(game->menu.title_font, game->menu.title, game->menu.title_font.baseSize, spacing);
+  float title_spacing = game->menu.title_font.baseSize * 0.01f;
+  Vector2 title_size =
+      MeasureTextEx(game->menu.title_font, game->menu.title, game->menu.title_font.baseSize, title_spacing);
   Vector2 title_pos = (Vector2){SCREEN_WIDTH / 2.0f - title_size.x / 2.0f, 150};
   DrawTextEx(game->menu.title_font, game->menu.title, title_pos, game->menu.title_font.baseSize, title_spacing,
              BUTTON_TITLE_COLOR);
@@ -96,10 +95,10 @@ void draw_menu(Game *game)
     DrawRectangleRounded(outline, BUTTON_ROUNDNESS, BUTTON_SEGMENTS, BUTTON_OUTLINE_COLOR);
     DrawRectangleRounded(rec, BUTTON_ROUNDNESS, BUTTON_SEGMENTS, color);
 
-    Vector2 text_size = MeasureTextEx(font, text, (float)FONT_SIZE, spacing);
+    Vector2 text_size = MeasureTextEx(font, text, (float)FONT_SIZE, TEXT_SPACING);
     Vector2 text_pos = (Vector2){rec.x + Lerp(0.0f, rec.width - text_size.x, h_align),
                                  rec.y + Lerp(0.0f, rec.height - text_size.y, v_align)};
 
-    DrawTextEx(font, text, text_pos, FONT_SIZE, spacing, BUTTON_TEXT_COLOR);
+    DrawTextEx(font, text, text_pos, FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
   }
 }
