@@ -16,7 +16,8 @@ SRC = main.c \
 	  src/cursor.c \
 	  src/pause_menu.c \
 	  src/button.c \
-	  src/audio.c
+	  src/audio.c \
+	  src/slider.c
 
 OBJ = $(patsubst %.c,build/%.o,$(SRC))
 DEP = $(OBJ:.o=.d)

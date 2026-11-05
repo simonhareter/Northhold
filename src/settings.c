@@ -3,6 +3,7 @@
 #include "config.h"
 #include "cursor.h"
 #include "game.h"
+#include "slider.h"
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
@@ -12,7 +13,7 @@ void init_settings(Game *game)
   const float center_x = SCREEN_WIDTH / 2.0f;
   const float center_y = SCREEN_HEIGHT / 2.0f;
 
-  const float box_width = 700.0f;
+  const float box_width = 800.0f;
   const float box_height = 650.0f;
 
   const float title_width = 300.0f;
@@ -48,21 +49,25 @@ void init_settings(Game *game)
         (Button){outline, rects[i], button_names[i], false, button_outline_color[i], button_color[i], roundness};
   }
 
-  const char *option_names[SETTINGS_COUNT] = {"Music Volume", "Test Option1", "Test Option4", "Test Option3"};
+  const char *option_names[SETTINGS_COUNT] = {"Music Volume"};
+
   for (int i = 0; i < SETTINGS_COUNT; i++)
   {
-    Setting option = {option_names[i], 50};
+    Setting option = {
+        .name = option_names[i], .value = 50, .min_value = 0, .max_value = 100, .slider = {.line = {0}, .knob = {0}}};
     game->settings.options[i] = option;
   }
+
+  init_slider(&game->settings);
 }
 
 void update_settings(Game *game)
 {
-  // putting pointer to 3rd element (only 3rd and 4th are actually buttons to click)
+  // putting pointer to 3rd element (only 3rd and 4th are clickable buttons. at some point might be a good idea to
+  // seperate clickable and non-clickbale ui elements)
   Button *buttons = &game->settings.ui_elements[2];
   const int BUTTON_COUNT = 2;
-  bool hovering_button = is_mouse_over_any_button(buttons, BUTTON_COUNT);
-  update_cursor(hovering_button);
+  bool hovering = is_mouse_over_any_button(buttons, BUTTON_COUNT);
 
   // 3 -> 0, 4 -> 1
   switch (which_button_pressed(buttons, SETTINGS_UI_ELEMENTS_COUNT))
@@ -78,9 +83,30 @@ void update_settings(Game *game)
     default:
       break;
   }
+
+  // check if any knob is hovered
+  for (int i = 0; i < SETTINGS_COUNT; i++)
+  {
+    Setting option = game->settings.options[i];
+
+    if (is_mouse_over_slider_knob(option.slider.knob))
+    {
+      hovering = true;
+      break;
+    }
+  }
+
+  update_cursor(hovering);
+  update_slider(&game->settings);
 }
 
 void draw_settings(Game *game)
+{
+  draw_ui_elements(game);
+  draw_options(game);
+}
+
+void draw_ui_elements(Game *game)
 {
   for (int i = 0; i < SETTINGS_UI_ELEMENTS_COUNT; i++)
   {
@@ -105,25 +131,30 @@ void draw_settings(Game *game)
 
     DrawTextEx(game->font, text, text_pos, FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
   }
+}
 
-  float box_height = game->settings.ui_elements[0].rec.height;
-  float rec_height = game->settings.ui_elements[TITLE].rec.height;
-  float option_height = SCREEN_HEIGHT / 2.0f - box_height / 2.0f + rec_height * 2.0f;
-  float option_start_pos = SCREEN_WIDTH / 2.0f - 300.0f;
-  float option_bar_start_pos = option_start_pos + 200;
-  float option_bar_width = SCREEN_WIDTH * 0.15625;
+void draw_options(Game *game)
+{
+  float padding = 50;
+  float gap = 40;
+
+  Rectangle box = game->settings.ui_elements[BOX].rec;
+  Rectangle rec = game->settings.ui_elements[TITLE].rec;
 
   for (int i = 0; i < SETTINGS_COUNT; i++)
   {
-    DrawTextEx(game->settings.font, game->settings.options[i].name,
-               (Vector2){option_start_pos, option_height + i * rec_height}, SETTINGS_FONT_SIZE, TEXT_SPACING,
-               BUTTON_TEXT_COLOR);
+    const char *name = game->settings.options[i].name;
+    const char *value = TextFormat("%d", game->settings.options[i].value);
 
-    DrawLine(option_bar_start_pos, option_height + i * rec_height + 16, option_bar_start_pos + option_bar_width,
-             option_height + i * rec_height + 16, BUTTON_TITLE_COLOR);
+    Vector2 option_pos = {box.x + padding, box.y + rec.height * i + padding};
 
-    DrawTextEx(game->settings.font, TextFormat("%d%%", game->settings.options[i].value),
-               (Vector2){option_start_pos + option_bar_width + 250, option_height + i * rec_height}, SETTINGS_FONT_SIZE,
-               TEXT_SPACING, BUTTON_TEXT_COLOR);
+    Setting *option = &game->settings.options[i];
+
+    float value_x = option->slider.line.x + option->slider.line.width + gap;
+    Vector2 value_pos = {value_x, box.y + rec.height * i + padding};
+
+    DrawTextEx(game->settings.font, name, option_pos, SETTINGS_FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
+    DrawTextEx(game->settings.font, value, value_pos, SETTINGS_FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
   }
+  draw_slider(&game->settings);
 }

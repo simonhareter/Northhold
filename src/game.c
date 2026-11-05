@@ -15,9 +15,9 @@ void init_game(Game *game)
   InitAudioDevice();
   play_menu_music(game);
 
-  init_menu(game);
-  init_settings(game);
-  init_pause_menu(game);
+  game->font = LoadFontEx("../assets/fonts/static/EBGaramond-Medium.ttf", FONT_SIZE, NULL, 0);
+  game->menu.title_font = LoadFontEx("../assets/fonts/static/EBGaramond-Bold.ttf", MENU_TITLE_FONT_SIZE, NULL, 0);
+  game->settings.font = LoadFontEx("../assets/fonts/static/EBGaramond-Medium.ttf", SETTINGS_FONT_SIZE, NULL, 0);
 
   game->should_exit = false;
   game->state = GAME_STATE_MENU;
@@ -26,9 +26,9 @@ void init_game(Game *game)
                             .rotation = 0.0f,
                             .zoom = 1.0f};
 
-  game->font = LoadFontEx("../assets/fonts/static/EBGaramond-Medium.ttf", FONT_SIZE, NULL, 0);
-  game->menu.title_font = LoadFontEx("../assets/fonts/static/EBGaramond-Bold.ttf", MENU_TITLE_FONT_SIZE, NULL, 0);
-  game->settings.font = LoadFontEx("../assets/fonts/static/EBGaramond-Medium.ttf", SETTINGS_FONT_SIZE, NULL, 0);
+  init_menu(game);
+  init_settings(game);
+  init_pause_menu(game);
 
   load_world(&game->world);
   load_assets(&game->assets);

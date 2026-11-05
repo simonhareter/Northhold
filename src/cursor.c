@@ -49,3 +49,9 @@ int which_button_pressed(Button *options, int size)
   }
   return -1;
 }
+
+bool is_mouse_over_slider_knob(Rectangle knob)
+{
+  Vector2 mouse_pos = {GetMouseX(), GetMouseY()};
+  return CheckCollisionPointRec(mouse_pos, knob);
+}

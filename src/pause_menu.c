@@ -6,6 +6,7 @@
 
 #include <raylib.h>
 #include <raymath.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 void init_pause_menu(Game *game)
@@ -40,7 +41,8 @@ void init_pause_menu(Game *game)
                               rec_pos_y - BUTTON_OUTLINE_THICKNESS + rec_height * (i * 2),
                               rec_width + BUTTON_OUTLINE_THICKNESS * 2, rec_height + BUTTON_OUTLINE_THICKNESS * 2};
     Rectangle curr_button_rec = {rec_pos_x, rec_pos_y + rec_height * (i * 2), rec_width, rec_height};
-    pause_menu.options[i] = (Button){curr_outline, curr_button_rec, button_names[i]};
+    pause_menu.options[i] = (Button){curr_outline,         curr_button_rec, button_names[i], false,
+                                     BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_ROUNDNESS};
   }
 
   game->pause_menu = pause_menu;
