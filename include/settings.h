@@ -17,10 +17,15 @@ typedef enum
 {
   BOX,
   TITLE,
-  CANCEL,
-  SAVE,
   SETTINGS_UI_ELEMENTS_COUNT
 } SettingsUiElements;
+
+typedef enum
+{
+  CANCEL,
+  SAVE,
+  SETTINGS_BUTTON_COUNT
+} SettingsButton;
 
 typedef struct
 {
@@ -33,6 +38,7 @@ typedef struct
 
 typedef struct Settings
 {
+  Button buttons[SETTINGS_BUTTON_COUNT];
   Button ui_elements[SETTINGS_UI_ELEMENTS_COUNT];
   Setting options[SETTINGS_COUNT];
   Setting original_options[SETTINGS_COUNT];
@@ -48,7 +54,7 @@ void save_settings(Game *game);
 void update_settings(Game *game);
 
 void draw_settings(Game *game);
-void draw_ui_elements(Game *game);
+void draw_ui_elements(Button *elements, int element_count, Font *font);
 void draw_options(Game *game);
 
 #endif

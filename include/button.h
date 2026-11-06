@@ -28,6 +28,7 @@ typedef struct
   bool is_hovered;
   Color outline_color;
   Color rec_color;
+  Color hovered_color;
   float roundness;
 } Button;
 

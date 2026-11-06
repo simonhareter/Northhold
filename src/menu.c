@@ -44,9 +44,6 @@ void update_menu(Game *game)
 {
   Button *options = game->menu.options;
 
-  bool hovering_button = is_mouse_over_any_button(options, MENU_ITEM_COUNT);
-  update_cursor(hovering_button);
-
   switch (which_button_pressed(options, MENU_ITEM_COUNT))
   {
     case 0:

@@ -2,12 +2,14 @@
 #include "assets.h"
 #include "audio.h"
 #include "config.h"
+#include "cursor.h"
 #include "menu.h"
 #include "pause_menu.h"
 #include "renderer.h"
 #include "settings.h"
 #include "world.h"
 #include <raylib.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 void init_game(Game *game)
@@ -41,30 +43,44 @@ void init_game(Game *game)
 
 void update_game(Game *game)
 {
+  bool is_hovering = false;
+
   switch (game->state)
   {
     case GAME_STATE_MENU:
-      update_menu(game);
-      update_menu_music(game);
-
       if (game->overlay_state == OVERLAY_STATE_SETTINGS)
       {
         update_settings(game);
+        is_hovering = is_hovering_settings(game);
+      }
+      else
+      {
+        update_menu(game);
+        is_hovering = is_hovering_menu(game);
       }
 
+      update_menu_music(game);
       break;
+
     case GAME_STATE_PLAYING:
       break;
-    case GAME_STATE_PAUSED:
-      update_pause_menu(game);
 
+    case GAME_STATE_PAUSED:
       if (game->overlay_state == OVERLAY_STATE_SETTINGS)
       {
         update_settings(game);
+        is_hovering = is_hovering_settings(game);
+      }
+      else
+      {
+        update_pause_menu(game);
+        is_hovering = is_hovering_pause_menu(game);
       }
 
       break;
   }
+
+  update_cursor(is_hovering);
 }
 
 void draw_current_state(Game *game)

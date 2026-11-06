@@ -1,5 +1,6 @@
 #include "cursor.h"
 #include "button.h"
+#include "pause_menu.h"
 #include <raylib.h>
 #include <stddef.h>
 
@@ -54,4 +55,32 @@ bool is_mouse_over_slider_knob(Rectangle knob)
 {
   Vector2 mouse_pos = {GetMouseX(), GetMouseY()};
   return CheckCollisionPointRec(mouse_pos, knob);
+}
+
+bool is_hovering_menu(Game *game)
+{
+  Button *options = game->menu.options;
+  return is_mouse_over_any_button(options, MENU_ITEM_COUNT);
+}
+
+bool is_hovering_pause_menu(Game *game)
+{
+  Button *options = game->pause_menu.options;
+  return is_mouse_over_any_button(options, PAUSE_MENU_COUNT);
+}
+
+bool is_hovering_settings(Game *game)
+{
+  // check if any knob is hovered
+  for (int i = 0; i < SETTINGS_COUNT; i++)
+  {
+    Setting option = game->settings.options[i];
+
+    if (is_mouse_over_slider_knob(option.slider.knob))
+    {
+      return true;
+    }
+  }
+
+  return is_mouse_over_any_button(game->settings.buttons, SETTINGS_BUTTON_COUNT);
 }

@@ -23,18 +23,23 @@ void init_settings(Game *game)
   const float button_height = 50.0f;
   const float button_margin = 150.0f;
 
-  const char *button_names[SETTINGS_UI_ELEMENTS_COUNT] = {"", "Settings", "Cancel", "Save"};
+  const char *ui_button_names[SETTINGS_UI_ELEMENTS_COUNT] = {"", "Settings"};
+  const char *button_names[SETTINGS_BUTTON_COUNT] = {"Cancel", "Save"};
 
-  const Color button_outline_color[SETTINGS_UI_ELEMENTS_COUNT] = {
-      Fade(BUTTON_OUTLINE_COLOR, BOX_OPACITY), BUTTON_OUTLINE_COLOR, BUTTON_OUTLINE_COLOR, BUTTON_OUTLINE_COLOR};
+  const Color ui_button_outline_color[SETTINGS_UI_ELEMENTS_COUNT] = {Fade(BUTTON_OUTLINE_COLOR, BOX_OPACITY),
+                                                                     BUTTON_OUTLINE_COLOR};
+  const Color button_outline_color[SETTINGS_BUTTON_COUNT] = {BUTTON_OUTLINE_COLOR, BUTTON_OUTLINE_COLOR};
 
-  const Color button_color[SETTINGS_UI_ELEMENTS_COUNT] = {Fade(BLACK, BOX_OPACITY), BUTTON_TITLE_COLOR,
-                                                          BUTTON_TITLE_COLOR, BUTTON_COLOR};
+  const Color ui_button_color[SETTINGS_UI_ELEMENTS_COUNT] = {Fade(BLACK, BOX_OPACITY), BUTTON_TITLE_COLOR};
+  const Color button_color[SETTINGS_BUTTON_COUNT] = {BUTTON_TITLE_COLOR, BUTTON_COLOR};
 
-  Rectangle rects[SETTINGS_UI_ELEMENTS_COUNT] = {
+  Rectangle ui_buttons[SETTINGS_UI_ELEMENTS_COUNT] = {
       [BOX] = {center_x - box_width / 2.0f, center_y - box_height / 2.0f, box_width, box_height},
       [TITLE] = {center_x - title_width / 2.0f, center_y - box_height / 2.0f - button_height / 2.0f, title_width,
                  button_height},
+  };
+
+  Rectangle buttons[SETTINGS_BUTTON_COUNT] = {
       [CANCEL] = {center_x - button_width / 2.0f - button_margin, center_y + box_height / 2.0f - button_height * 1.5f,
                   button_width, button_height},
       [SAVE] = {center_x - button_width / 2.0f + button_margin, center_y + box_height / 2.0f - button_height * 1.5f,
@@ -44,11 +49,25 @@ void init_settings(Game *game)
   {
     float roundness = (i == BOX) ? MENU_ROUNDNESS : BUTTON_ROUNDNESS;
 
-    Rectangle outline = {rects[i].x - BUTTON_OUTLINE_THICKNESS, rects[i].y - BUTTON_OUTLINE_THICKNESS,
-                         rects[i].width + BUTTON_OUTLINE_THICKNESS * 2, rects[i].height + BUTTON_OUTLINE_THICKNESS * 2};
+    Rectangle outline = {ui_buttons[i].x - BUTTON_OUTLINE_THICKNESS, ui_buttons[i].y - BUTTON_OUTLINE_THICKNESS,
+                         ui_buttons[i].width + BUTTON_OUTLINE_THICKNESS * 2,
+                         ui_buttons[i].height + BUTTON_OUTLINE_THICKNESS * 2};
 
-    game->settings.ui_elements[i] =
-        (Button){outline, rects[i], button_names[i], false, button_outline_color[i], button_color[i], roundness};
+    game->settings.ui_elements[i] = (Button){
+        outline, ui_buttons[i], ui_button_names[i], false, ui_button_outline_color[i], ui_button_color[i], roundness};
+  }
+
+  for (int i = 0; i < SETTINGS_BUTTON_COUNT; i++)
+  {
+    Rectangle outline = {buttons[i].x - BUTTON_OUTLINE_THICKNESS, buttons[i].y - BUTTON_OUTLINE_THICKNESS,
+                         buttons[i].width + BUTTON_OUTLINE_THICKNESS * 2,
+                         buttons[i].height + BUTTON_OUTLINE_THICKNESS * 2};
+
+    Color hovered_color = i == CANCEL ? BUTTON_TITLE_COLOR_HOVERED : BUTTON_COLOR_HOVERED;
+
+    game->settings.buttons[i] =
+        (Button){outline,         buttons[i],    button_names[i], false, button_outline_color[i],
+                 button_color[i], hovered_color, BUTTON_ROUNDNESS};
   }
 
   const char *option_names[SETTINGS_COUNT] = {"Music Volume"};
@@ -148,9 +167,10 @@ void load_settings(Game *game)
         start++;
       }
     }
-    value_char[3] = '\0';
+    value_char[start] = '\0';
     game->settings.options[i].value = atoi(value_char);
     i++;
+    start = 0;
   }
 
   fclose(fptr);
@@ -158,31 +178,16 @@ void load_settings(Game *game)
 
 void update_settings(Game *game)
 {
-  // putting pointer to 3rd element (only 3rd and 4th are clickable buttons. at some point might be a good idea to
+  // putting pointer to 2nd element (only 2nd and 3rd are clickable buttons. at some point might be a good idea to
   // seperate clickable and non-clickbale ui elements)
-  Button *buttons = &game->settings.ui_elements[2];
-  const int BUTTON_COUNT = 2;
-  bool hovering = is_mouse_over_any_button(buttons, BUTTON_COUNT);
+  Button *buttons = &game->settings.buttons[0];
 
-  // check if any knob is hovered
-  for (int i = 0; i < SETTINGS_COUNT; i++)
-  {
-    Setting option = game->settings.options[i];
-
-    if (is_mouse_over_slider_knob(option.slider.knob))
-    {
-      hovering = true;
-      break;
-    }
-  }
-
-  update_cursor(hovering);
   update_slider(&game->settings);
 
   SetMusicVolume(game->menu_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
 
   // 3 -> 0, 4 -> 1
-  switch (which_button_pressed(buttons, SETTINGS_UI_ELEMENTS_COUNT))
+  switch (which_button_pressed(buttons, SETTINGS_BUTTON_COUNT))
   {
     case 0:
       game->overlay_state = OVERLAY_STATE_NONE;
@@ -201,34 +206,41 @@ void update_settings(Game *game)
 
 void draw_settings(Game *game)
 {
-  draw_ui_elements(game);
+  draw_ui_elements(game->settings.ui_elements, SETTINGS_UI_ELEMENTS_COUNT, &game->font);
+  draw_ui_elements(game->settings.buttons, SETTINGS_BUTTON_COUNT, &game->font);
   draw_options(game);
 }
 
-void draw_ui_elements(Game *game)
+void draw_ui_elements(Button *elements, int element_count, Font *font)
 {
-  for (int i = 0; i < SETTINGS_UI_ELEMENTS_COUNT; i++)
+  if (font == NULL)
   {
-    Rectangle outline = game->settings.ui_elements[i].outline;
-    Rectangle button = game->settings.ui_elements[i].rec;
-    float roundness = game->settings.ui_elements[i].roundness;
-    Color outline_color = game->settings.ui_elements[i].outline_color;
-    Color rec_color = game->settings.ui_elements[i].rec_color;
+    TraceLog(LOG_ERROR, "Font pointer is NULL!");
+    return;
+  }
 
-    if (i >= 2 && game->settings.ui_elements[i].is_hovered)
+  for (int i = 0; i < element_count; i++)
+  {
+    Rectangle outline = elements[i].outline;
+    Rectangle button = elements[i].rec;
+    float roundness = elements[i].roundness;
+    Color outline_color = elements[i].outline_color;
+    Color rec_color = elements[i].rec_color;
+
+    if (elements[i].is_hovered)
     {
-      rec_color = (i == SAVE) ? BUTTON_COLOR_HOVERED : BUTTON_TITLE_COLOR_HOVERED;
+      rec_color = elements[i].hovered_color;
     }
 
     DrawRectangleRounded(outline, roundness, BUTTON_SEGMENTS, outline_color);
     DrawRectangleRounded(button, roundness, BUTTON_SEGMENTS, rec_color);
 
-    const char *text = game->settings.ui_elements[i].text;
-    Vector2 text_size = MeasureTextEx(game->font, text, FONT_SIZE, TEXT_SPACING);
+    const char *text = elements[i].text;
+    Vector2 text_size = MeasureTextEx(*font, text, FONT_SIZE, TEXT_SPACING);
     Vector2 text_pos = (Vector2){button.x + Lerp(0.0f, button.width - text_size.x, H_ALIGN),
                                  button.y + Lerp(0.0f, button.height - text_size.y, V_ALIGN)};
 
-    DrawTextEx(game->font, text, text_pos, FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
+    DrawTextEx(*font, text, text_pos, FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
   }
 }
 
