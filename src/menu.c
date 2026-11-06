@@ -3,6 +3,7 @@
 #include "config.h"
 #include "cursor.h"
 #include "game.h"
+#include "settings.h"
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
@@ -11,6 +12,7 @@
 void init_menu(Game *game)
 {
   PlayMusicStream(game->menu_music);
+
   game->menu.title = "Northhold";
   // game->menu.background = LoadTexture("../assets/title/background.png");
 
@@ -53,6 +55,7 @@ void update_menu(Game *game)
     case 1:
       break;
     case 2:
+      open_settings(game);
       game->state = GAME_STATE_SETTINGS;
       SetMouseCursor(MOUSE_CURSOR_DEFAULT);
       game->menu.options[2].is_hovered = false;

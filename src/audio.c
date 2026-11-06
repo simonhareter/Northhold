@@ -2,7 +2,7 @@
 #include "game.h"
 #include <raylib.h>
 
-void play_menu_music(Game *game)
+void load_menu_music(Game *game)
 {
   game->menu_music = LoadMusicStream("../assets/music/menu.mp3");
   game->menu_music.looping = true;

@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-void play_menu_music(Game *game);
+void load_menu_music(Game *game);
 void update_menu_music(Game *game);
 void unload_music(Game *game);
 #endif

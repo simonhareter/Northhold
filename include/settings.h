@@ -35,14 +35,20 @@ typedef struct Settings
 {
   Button ui_elements[SETTINGS_UI_ELEMENTS_COUNT];
   Setting options[SETTINGS_COUNT];
+  Setting original_options[SETTINGS_COUNT];
   Font font;
 } Settings;
 
 void init_settings(Game *game);
+void create_settings(Game *game);
+void load_settings(Game *game);
+void open_settings(Game *game);
+void cancel_settings(Game *game);
+void save_settings(Game *game);
 void update_settings(Game *game);
+
 void draw_settings(Game *game);
 void draw_ui_elements(Game *game);
 void draw_options(Game *game);
-
 
 #endif

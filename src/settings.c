@@ -7,6 +7,8 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 void init_settings(Game *game)
 {
@@ -58,7 +60,100 @@ void init_settings(Game *game)
     game->settings.options[i] = option;
   }
 
-  init_slider(&game->settings);
+  create_settings(game);
+}
+
+// XDG_CONFIG_HOME = /home/.config/
+// XDG_DATA_HOME = /home/.local/share/
+void create_settings(Game *game)
+{
+  const char *base = getenv("XDG_CONFIG_HOME");
+
+  if (base == NULL || base[0] == '\0')
+  {
+    const char *home = getenv("HOME");
+
+    if (home == NULL)
+    {
+      TraceLog(LOG_ERROR, "HOME is not set");
+      return;
+    }
+    base = TextFormat("%s/.config", home);
+  }
+
+  const char *directory = TextFormat("%s/Northhold", base);
+
+  if (MakeDirectory(directory) != 0 && !DirectoryExists(directory))
+  {
+    TraceLog(LOG_ERROR, "Failed to create settings directory");
+    return;
+  }
+
+  const char *path = TextFormat("%s/settings.txt", directory);
+
+  if (FileExists(path))
+  {
+    return;
+  }
+
+  FILE *fptr = fopen(path, "w");
+
+  if (fptr == NULL)
+  {
+    TraceLog(LOG_ERROR, "Failed to open settings file: %s", path);
+    return;
+  }
+
+  for (int i = 0; i < SETTINGS_COUNT; i++)
+  {
+    Setting option = game->settings.options[i];
+
+    fprintf(fptr, "%s = %d\n", option.name, option.value);
+  }
+  fclose(fptr);
+}
+
+void load_settings(Game *game)
+{
+  const char *config_home = getenv("XDG_CONFIG_HOME");
+
+  FILE *fptr = fopen(TextFormat("%s/Northhold/settings.txt", config_home), "r");
+  int size = 25;
+  char line[size];
+
+  if (fptr == NULL)
+  {
+    TraceLog(LOG_ERROR, "Not able to open the settings.txt file");
+    return;
+  }
+
+  int i = 0, equals = 61;
+  int start = 0;
+  char value_char[4];
+
+  while (fgets(line, size, fptr))
+  {
+    for (int j = 0; j < size; j++)
+    {
+      if (line[j] == equals)
+      {
+        j++;
+        continue;
+      }
+
+      if (line[j] >= 48 && line[j] <= 57 && start <= 2)
+      {
+        printf("%c\n", line[j]);
+        value_char[start] = line[j];
+        start++;
+      }
+    }
+    value_char[3] = '\0';
+    game->settings.options[i].value = atoi(value_char);
+    i++;
+  }
+
+  fclose(fptr);
 }
 
 void update_settings(Game *game)
@@ -68,21 +163,6 @@ void update_settings(Game *game)
   Button *buttons = &game->settings.ui_elements[2];
   const int BUTTON_COUNT = 2;
   bool hovering = is_mouse_over_any_button(buttons, BUTTON_COUNT);
-
-  // 3 -> 0, 4 -> 1
-  switch (which_button_pressed(buttons, SETTINGS_UI_ELEMENTS_COUNT))
-  {
-    case 0:
-      game->state = GAME_STATE_MENU;
-      TraceLog(LOG_INFO, "didnt save settings");
-      break;
-    case 1:
-      game->state = GAME_STATE_MENU;
-      TraceLog(LOG_INFO, "saved settings");
-      break;
-    default:
-      break;
-  }
 
   // check if any knob is hovered
   for (int i = 0; i < SETTINGS_COUNT; i++)
@@ -98,6 +178,25 @@ void update_settings(Game *game)
 
   update_cursor(hovering);
   update_slider(&game->settings);
+
+  SetMusicVolume(game->menu_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
+
+  // 3 -> 0, 4 -> 1
+  switch (which_button_pressed(buttons, SETTINGS_UI_ELEMENTS_COUNT))
+  {
+    case 0:
+      game->state = GAME_STATE_MENU;
+      cancel_settings(game);
+      TraceLog(LOG_INFO, "didnt save settings");
+      break;
+    case 1:
+      game->state = GAME_STATE_MENU;
+      save_settings(game);
+      TraceLog(LOG_INFO, "saved settings");
+      break;
+    default:
+      break;
+  }
 }
 
 void draw_settings(Game *game)
@@ -157,4 +256,47 @@ void draw_options(Game *game)
     DrawTextEx(game->settings.font, value, value_pos, SETTINGS_FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
   }
   draw_slider(&game->settings);
+}
+
+void open_settings(Game *game)
+{
+  Settings *settings = &game->settings;
+
+  for (int i = 0; i < SETTINGS_COUNT; i++)
+  {
+    settings->original_options[i] = settings->options[i];
+  }
+}
+
+void cancel_settings(Game *game)
+{
+  Settings *settings = &game->settings;
+
+  for (int i = 0; i < SETTINGS_COUNT; i++)
+  {
+    settings->options[i] = settings->original_options[i];
+  }
+}
+
+void save_settings(Game *game)
+{
+  const char *config_home = getenv("XDG_CONFIG_HOME");
+
+  FILE *fptr = fopen(TextFormat("%s/Northhold/settings.txt", config_home), "w");
+
+  if (fptr == NULL)
+  {
+    TraceLog(LOG_ERROR, "Failed to open settings file.");
+    return;
+  }
+
+  Settings *settings = &game->settings;
+
+  for (int i = 0; i < SETTINGS_COUNT; i++)
+  {
+    Setting *option = &settings->options[i];
+    fprintf(fptr, "%s = %d\n", option->name, option->value);
+  }
+
+  fclose(fptr);
 }

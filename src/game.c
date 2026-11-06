@@ -2,18 +2,18 @@
 #include "assets.h"
 #include "audio.h"
 #include "config.h"
-#include "cursor.h"
 #include "menu.h"
 #include "pause_menu.h"
 #include "renderer.h"
 #include "settings.h"
 #include "world.h"
 #include <raylib.h>
+#include <stdio.h>
 
 void init_game(Game *game)
 {
   InitAudioDevice();
-  play_menu_music(game);
+  load_menu_music(game);
 
   game->font = LoadFontEx("../assets/fonts/static/EBGaramond-Medium.ttf", FONT_SIZE, NULL, 0);
   game->menu.title_font = LoadFontEx("../assets/fonts/static/EBGaramond-Bold.ttf", MENU_TITLE_FONT_SIZE, NULL, 0);
@@ -28,6 +28,11 @@ void init_game(Game *game)
 
   init_menu(game);
   init_settings(game);
+  load_settings(game);
+
+  SetMusicVolume(game->menu_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
+
+  init_slider(&game->settings);
   init_pause_menu(game);
 
   load_world(&game->world);

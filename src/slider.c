@@ -40,7 +40,6 @@ void init_slider(Settings *settings)
   float line_height = 1;
 
   float knob_width = 15, knob_height = 25;
-  float knob_x = line_x + slider_width / 2 - knob_width / 2;
 
   for (int i = 0; i < SETTINGS_COUNT; i++)
   {
@@ -49,6 +48,9 @@ void init_slider(Settings *settings)
     float option_y = box_y + padding + rec_height * i;
     Vector2 text_size = MeasureTextEx(settings->font, option->name, SETTINGS_FONT_SIZE, TEXT_SPACING);
     float center_y = option_y + text_size.y / 2.0f;
+
+    float knob_percentage = option->value / 100.0f;
+    float knob_x = line_x + knob_percentage * (slider_width - knob_width);
 
     Rectangle line = {line_x, center_y - line_height / 2, slider_width, line_height};
     Rectangle knob = {knob_x, center_y - knob_height / 2, knob_width, knob_height};
