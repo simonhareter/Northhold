@@ -64,7 +64,7 @@ void update_pause_menu(Game *game)
       TraceLog(LOG_INFO, "Saving the game is not yet implemented");
       break;
     case 2:
-      game->state = GAME_STATE_SETTINGS;
+      game->overlay_state = OVERLAY_STATE_SETTINGS;
       break;
     case 3:
       StopMusicStream(game->menu_music);

@@ -14,8 +14,13 @@ typedef enum GameState
   GAME_STATE_MENU,
   GAME_STATE_PLAYING,
   GAME_STATE_PAUSED,
-  GAME_STATE_SETTINGS
 } GameState;
+
+typedef enum OverlayState
+{
+  OVERLAY_STATE_NONE,
+  OVERLAY_STATE_SETTINGS,
+} OverlayState;
 
 typedef struct Game
 {
@@ -24,6 +29,7 @@ typedef struct Game
   Settings settings;
   PauseMenu pause_menu;
   GameState state;
+  OverlayState overlay_state;
   World world;
   Assets assets;
   Camera2D camera;

@@ -1,6 +1,7 @@
 #include "input.h"
 #include "camera.h"
 #include "game.h"
+#include "settings.h"
 #include <raylib.h>
 
 void handle_input(Game *game)
@@ -10,7 +11,12 @@ void handle_input(Game *game)
   // INGAME MENU
   if (IsKeyPressed(KEY_ESCAPE))
   {
-    if (game->state == GAME_STATE_PLAYING)
+    if (game->overlay_state == OVERLAY_STATE_SETTINGS)
+    {
+      cancel_settings(game);
+      game->overlay_state = OVERLAY_STATE_NONE;
+    }
+    else if (game->state == GAME_STATE_PLAYING)
     {
       game->state = GAME_STATE_PAUSED;
     }

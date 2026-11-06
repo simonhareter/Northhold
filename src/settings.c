@@ -185,12 +185,12 @@ void update_settings(Game *game)
   switch (which_button_pressed(buttons, SETTINGS_UI_ELEMENTS_COUNT))
   {
     case 0:
-      game->state = GAME_STATE_MENU;
+      game->overlay_state = OVERLAY_STATE_NONE;
       cancel_settings(game);
       TraceLog(LOG_INFO, "didnt save settings");
       break;
     case 1:
-      game->state = GAME_STATE_MENU;
+      game->overlay_state = OVERLAY_STATE_NONE;
       save_settings(game);
       TraceLog(LOG_INFO, "saved settings");
       break;

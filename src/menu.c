@@ -14,6 +14,7 @@ void init_menu(Game *game)
   PlayMusicStream(game->menu_music);
 
   game->menu.title = "Northhold";
+  game->overlay_state = OVERLAY_STATE_NONE;
   // game->menu.background = LoadTexture("../assets/title/background.png");
 
   float menu_width = 300;
@@ -56,7 +57,7 @@ void update_menu(Game *game)
       break;
     case 2:
       open_settings(game);
-      game->state = GAME_STATE_SETTINGS;
+      game->overlay_state = OVERLAY_STATE_SETTINGS;
       SetMouseCursor(MOUSE_CURSOR_DEFAULT);
       game->menu.options[2].is_hovered = false;
       break;
