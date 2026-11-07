@@ -11,7 +11,7 @@
 
 void init_menu(Game *game)
 {
-  PlayMusicStream(game->menu_music);
+  PlayMusicStream(game->music.menu_music);
 
   game->menu.title = "Northhold";
   game->overlay_state = OVERLAY_STATE_NONE;
@@ -49,6 +49,9 @@ void update_menu(Game *game)
     case 0:
       game->state = GAME_STATE_PLAYING;
       SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+      StopMusicStream(game->music.menu_music);
+      StopMusicStream(game->music.playing1_music);
+      PlayMusicStream(game->music.playing1_music);
       break;
     case 1:
       break;

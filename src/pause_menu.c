@@ -11,6 +11,8 @@
 
 void init_pause_menu(Game *game)
 {
+  PlayMusicStream(game->music.playing1_music);
+
   float menu_box_width = 400;
   float menu_box_height = 500;
   Rectangle menu_box = {SCREEN_WIDTH / 2.0f - menu_box_width / 2.0f, SCREEN_HEIGHT / 2.0f - menu_box_height / 2.0f,
@@ -85,8 +87,9 @@ void update_pause_menu(Game *game)
       game->overlay_state = OVERLAY_STATE_SETTINGS;
       break;
     case 3:
-      StopMusicStream(game->menu_music);
-      PlayMusicStream(game->menu_music);
+      StopMusicStream(game->music.playing1_music);
+      StopMusicStream(game->music.menu_music);
+      PlayMusicStream(game->music.menu_music);
       game->state = GAME_STATE_MENU;
       break;
     default:

@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "assets.h"
+#include "audio.h"
 #include "menu.h"
 #include "pause_menu.h"
 #include "settings.h"
@@ -33,7 +34,7 @@ typedef struct Game
   World world;
   Assets assets;
   Camera2D camera;
-  Music menu_music;
+  GameMusic music;
   bool should_exit;
 } Game;
 

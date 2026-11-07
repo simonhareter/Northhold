@@ -16,6 +16,7 @@ void init_game(Game *game)
 {
   InitAudioDevice();
   load_menu_music(game);
+  load_playing_music(game);
 
   game->font = LoadFontEx("../assets/fonts/static/EBGaramond-Medium.ttf", FONT_SIZE, NULL, 0);
   game->menu.title_font = LoadFontEx("../assets/fonts/static/EBGaramond-Bold.ttf", MENU_TITLE_FONT_SIZE, NULL, 0);
@@ -32,7 +33,8 @@ void init_game(Game *game)
   init_settings(game);
   load_settings(game);
 
-  SetMusicVolume(game->menu_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
+  SetMusicVolume(game->music.menu_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
+  SetMusicVolume(game->music.playing1_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
 
   init_slider(&game->settings);
   init_pause_menu(game);
@@ -63,8 +65,6 @@ void update_game(Game *game)
       break;
 
     case GAME_STATE_PLAYING:
-      break;
-
     case GAME_STATE_PAUSED:
       if (game->overlay_state == OVERLAY_STATE_SETTINGS)
       {
@@ -77,6 +77,7 @@ void update_game(Game *game)
         is_hovering = is_hovering_pause_menu(game);
       }
 
+      update_playing_music(game);
       break;
   }
 

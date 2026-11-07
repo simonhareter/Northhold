@@ -190,7 +190,8 @@ void update_settings(Game *game)
 
   update_slider(&game->settings);
 
-  SetMusicVolume(game->menu_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
+  SetMusicVolume(game->music.menu_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
+  SetMusicVolume(game->music.playing1_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
 
   // 3 -> 0, 4 -> 1
   switch (which_button_pressed(buttons, SETTINGS_BUTTON_COUNT))
