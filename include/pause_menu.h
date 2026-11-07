@@ -15,12 +15,18 @@ typedef enum
   PAUSE_MENU_COUNT
 } PauseMenuItem;
 
+typedef enum
+{
+  PAUSE_MENU_BOX,
+  PAUSE_MENU_TITLE,
+  PAUSE_MENU_UI_ELEMENTS_COUNT
+} PauseMenuUiElements;
+
 typedef struct
 {
-  Rectangle menu_box;
-  Rectangle title_box;
-  const char *pause_menu_title;
-  Button options[PAUSE_MENU_COUNT];
+  Button ui_elements[PAUSE_MENU_UI_ELEMENTS_COUNT];
+  Button buttons[PAUSE_MENU_COUNT];
+  Font pause_menu_font;
 } PauseMenu;
 
 void update_pause_menu(Game *game);

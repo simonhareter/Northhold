@@ -65,7 +65,7 @@ bool is_hovering_menu(Game *game)
 
 bool is_hovering_pause_menu(Game *game)
 {
-  Button *options = game->pause_menu.options;
+  Button *options = game->pause_menu.buttons;
   return is_mouse_over_any_button(options, PAUSE_MENU_COUNT);
 }
 

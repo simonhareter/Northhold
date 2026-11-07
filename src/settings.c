@@ -53,8 +53,14 @@ void init_settings(Game *game)
                          ui_buttons[i].width + BUTTON_OUTLINE_THICKNESS * 2,
                          ui_buttons[i].height + BUTTON_OUTLINE_THICKNESS * 2};
 
-    game->settings.ui_elements[i] = (Button){
-        outline, ui_buttons[i], ui_button_names[i], false, ui_button_outline_color[i], ui_button_color[i], roundness};
+    game->settings.ui_elements[i] = (Button){outline,
+                                             ui_buttons[i],
+                                             ui_button_names[i],
+                                             false,
+                                             ui_button_outline_color[i],
+                                             ui_button_color[i],
+                                             BUTTON_TITLE_COLOR_HOVERED,
+                                             roundness};
   }
 
   for (int i = 0; i < SETTINGS_BUTTON_COUNT; i++)

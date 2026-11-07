@@ -11,22 +11,40 @@
 
 void init_pause_menu(Game *game)
 {
-  PauseMenu pause_menu;
-
   float menu_box_width = 400;
   float menu_box_height = 500;
   Rectangle menu_box = {SCREEN_WIDTH / 2.0f - menu_box_width / 2.0f, SCREEN_HEIGHT / 2.0f - menu_box_height / 2.0f,
                         menu_box_width, menu_box_height};
-
-  pause_menu.menu_box = menu_box;
 
   float title_box_width = 200;
   float title_box_height = 50;
   Rectangle title_box = {SCREEN_WIDTH / 2.0f - title_box_width / 2.0f, menu_box.y - title_box_height / 2.0f,
                          title_box_width, title_box_height};
 
-  pause_menu.title_box = title_box;
-  pause_menu.pause_menu_title = "Game Menu";
+  Rectangle ui_elements[PAUSE_MENU_UI_ELEMENTS_COUNT] = {[PAUSE_MENU_BOX] = menu_box, [PAUSE_MENU_TITLE] = title_box};
+  const char *ui_elements_text[PAUSE_MENU_UI_ELEMENTS_COUNT] = {"", "Game Menu"};
+
+  Color ui_elements_outline_color[PAUSE_MENU_UI_ELEMENTS_COUNT] = {Fade(BUTTON_OUTLINE_COLOR, BOX_OPACITY),
+                                                                   BUTTON_OUTLINE_COLOR};
+  Color ui_elements_color[PAUSE_MENU_UI_ELEMENTS_COUNT] = {Fade(BLACK, BOX_OPACITY), BUTTON_TITLE_COLOR};
+
+  for (int i = 0; i < PAUSE_MENU_UI_ELEMENTS_COUNT; i++)
+  {
+    float roundness = i == BOX ? MENU_ROUNDNESS : BUTTON_ROUNDNESS;
+
+    Rectangle outline = {ui_elements[i].x - BUTTON_OUTLINE_THICKNESS, ui_elements[i].y - BUTTON_OUTLINE_THICKNESS,
+                         ui_elements[i].width + BUTTON_OUTLINE_THICKNESS * 2,
+                         ui_elements[i].height + BUTTON_OUTLINE_THICKNESS * 2};
+
+    game->pause_menu.ui_elements[i] = (Button){outline,
+                                               ui_elements[i],
+                                               ui_elements_text[i],
+                                               false,
+                                               ui_elements_outline_color[i],
+                                               ui_elements_color[i],
+                                               BUTTON_COLOR_HOVERED,
+                                               roundness};
+  }
 
   float rec_width = 300;
   float rec_height = 50;
@@ -43,16 +61,15 @@ void init_pause_menu(Game *game)
 
     Rectangle curr_button_rec = {rec_pos_x, rec_pos_y + rec_height * (i * 2), rec_width, rec_height};
 
-    pause_menu.options[i] = (Button){curr_outline,         curr_button_rec, button_names[i],      false,
-                                     BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_COLOR_HOVERED, BUTTON_ROUNDNESS};
+    game->pause_menu.buttons[i] =
+        (Button){curr_outline,         curr_button_rec, button_names[i],      false,
+                 BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_COLOR_HOVERED, BUTTON_ROUNDNESS};
   }
-
-  game->pause_menu = pause_menu;
 }
 
 void update_pause_menu(Game *game)
 {
-  Button *options = game->pause_menu.options;
+  Button *options = game->pause_menu.buttons;
 
   switch (which_button_pressed(options, PAUSE_MENU_COUNT))
   {
@@ -85,30 +102,43 @@ void draw_pause_menu(Game *game)
   float spacing = FONT_SIZE * 0.1;
   float h_align = 0.5, v_align = 0.5;
 
-  DrawRectangleRec(game->pause_menu.menu_box, Fade(BLACK, 0.8f));
+  // PAUSE MENU UI ELEMENTS
+  for (int i = 0; i < PAUSE_MENU_UI_ELEMENTS_COUNT; i++)
+  {
+    Button *ui_element = &game->pause_menu.ui_elements[i];
 
-  // TITLE
-  DrawRectangleRec(game->pause_menu.title_box, BUTTON_TITLE_COLOR);
+    DrawRectangleRounded(ui_element->outline, ui_element->roundness, BUTTON_SEGMENTS, ui_element->outline_color);
+    DrawRectangleRounded(ui_element->rec, ui_element->roundness, BUTTON_SEGMENTS, ui_element->rec_color);
 
-  const char *title_text = game->pause_menu.pause_menu_title;
-  Rectangle title_rec = game->pause_menu.title_box;
-  Vector2 title_size = MeasureTextEx(font, title_text, FONT_SIZE, spacing);
-  Vector2 title_pos = (Vector2){title_rec.x + Lerp(0.0f, title_rec.width - title_size.x, h_align),
-                                title_rec.y + Lerp(0.0f, title_rec.height - title_size.y, v_align)};
+    const char *title_text = game->pause_menu.ui_elements[i].text;
+    Rectangle *title_rec = &game->pause_menu.ui_elements[i].rec;
+    Vector2 title_size = MeasureTextEx(font, title_text, FONT_SIZE, spacing);
+    Vector2 title_pos = (Vector2){title_rec->x + Lerp(0.0f, title_rec->width - title_size.x, h_align),
+                                  title_rec->y + Lerp(0.0f, title_rec->height - title_size.y, v_align)};
 
-  DrawTextEx(font, game->pause_menu.pause_menu_title, title_pos, FONT_SIZE, spacing, BUTTON_TITLE_TEXT_COLOR);
+    DrawTextEx(font, title_text, title_pos, FONT_SIZE, spacing, BUTTON_TEXT_COLOR);
+  }
 
   // PAUSE MENU OPTIONS
   for (int i = 0; i < PAUSE_MENU_COUNT; i++)
   {
-    Rectangle rec = game->pause_menu.options[i].rec;
-    const char *text = game->pause_menu.options[i].text;
+    Button *button = &game->pause_menu.buttons[i];
+    Rectangle *rec = &game->pause_menu.buttons[i].rec;
+    const char *text = game->pause_menu.buttons[i].text;
 
-    DrawRectangleRec(rec, BUTTON_COLOR);
+    Color button_color = button->rec_color;
+
+    if (button->is_hovered)
+    {
+      button_color = button->hovered_color;
+    }
+
+    DrawRectangleRounded(button->outline, button->roundness, BUTTON_SEGMENTS, button->outline_color);
+    DrawRectangleRounded(*rec, button->roundness, BUTTON_SEGMENTS, button_color);
 
     Vector2 text_size = MeasureTextEx(font, text, FONT_SIZE, spacing);
-    Vector2 text_pos = (Vector2){rec.x + Lerp(0.0f, rec.width - text_size.x, h_align),
-                                 rec.y + Lerp(0.0f, rec.height - text_size.y, v_align)};
+    Vector2 text_pos = (Vector2){rec->x + Lerp(0.0f, rec->width - text_size.x, h_align),
+                                 rec->y + Lerp(0.0f, rec->height - text_size.y, v_align)};
 
     DrawTextEx(font, text, text_pos, FONT_SIZE, spacing, BUTTON_TEXT_COLOR);
   }

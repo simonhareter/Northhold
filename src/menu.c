@@ -35,8 +35,8 @@ void init_menu(Game *game)
                               rec_pos_y - BUTTON_OUTLINE_THICKNESS + rec_height * i + space_height * i,
                               rec_width + BUTTON_OUTLINE_THICKNESS * 2, rec_height + BUTTON_OUTLINE_THICKNESS * 2};
     Rectangle curr_button_rec = {rec_pos_x, rec_pos_y + rec_height * i + space_height * i, rec_width, rec_height};
-    game->menu.options[i] = (Button){curr_outline,         curr_button_rec, button_names[i], false,
-                                     BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_ROUNDNESS};
+    game->menu.options[i] = (Button){curr_outline,         curr_button_rec, button_names[i],      false,
+                                     BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_COLOR_HOVERED, BUTTON_ROUNDNESS};
   }
 }
 
