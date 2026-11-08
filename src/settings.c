@@ -12,8 +12,8 @@
 
 void init_settings(Game *game)
 {
-  const float center_x = SCREEN_WIDTH / 2.0f;
-  const float center_y = SCREEN_HEIGHT / 2.0f;
+  const float center_x = GetScreenWidth() / 2.0f;
+  const float center_y = GetScreenHeight() / 2.0f;
 
   const float box_width = 800.0f;
   const float box_height = 650.0f;

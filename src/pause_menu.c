@@ -15,12 +15,12 @@ void init_pause_menu(Game *game)
 
   float menu_box_width = 400;
   float menu_box_height = 500;
-  Rectangle menu_box = {SCREEN_WIDTH / 2.0f - menu_box_width / 2.0f, SCREEN_HEIGHT / 2.0f - menu_box_height / 2.0f,
+  Rectangle menu_box = {GetScreenWidth() / 2.0f - menu_box_width / 2.0f, GetScreenHeight() / 2.0f - menu_box_height / 2.0f,
                         menu_box_width, menu_box_height};
 
   float title_box_width = 200;
   float title_box_height = 50;
-  Rectangle title_box = {SCREEN_WIDTH / 2.0f - title_box_width / 2.0f, menu_box.y - title_box_height / 2.0f,
+  Rectangle title_box = {GetScreenWidth() / 2.0f - title_box_width / 2.0f, menu_box.y - title_box_height / 2.0f,
                          title_box_width, title_box_height};
 
   Rectangle ui_elements[PAUSE_MENU_UI_ELEMENTS_COUNT] = {[PAUSE_MENU_BOX] = menu_box, [PAUSE_MENU_TITLE] = title_box};
@@ -50,8 +50,8 @@ void init_pause_menu(Game *game)
 
   float rec_width = 300;
   float rec_height = 50;
-  float rec_pos_x = SCREEN_WIDTH / 2.0f - rec_width / 2.0f;
-  float rec_pos_y = SCREEN_HEIGHT / 2.0f - menu_box_height / 2.0f + rec_height * 1.5f;
+  float rec_pos_x = GetScreenWidth() / 2.0f - rec_width / 2.0f;
+  float rec_pos_y = GetScreenHeight() / 2.0f - menu_box_height / 2.0f + rec_height * 1.5f;
 
   const char *button_names[PAUSE_MENU_COUNT] = {"Resume", "Save", "Settings", "Exit"};
 

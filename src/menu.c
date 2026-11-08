@@ -22,8 +22,8 @@ void init_menu(Game *game)
 
   float rec_width = menu_width;
   float rec_height = 50;
-  float rec_pos_x = SCREEN_WIDTH / 2.0f - rec_width / 2.0f;
-  float rec_pos_y = SCREEN_HEIGHT / 2.0f - menu_height / 2.0f;
+  float rec_pos_x = GetScreenWidth() / 2.0f - rec_width / 2.0f;
+  float rec_pos_y = GetScreenHeight() / 2.0f - menu_height / 2.0f;
 
   float space_height = rec_height;
 
@@ -77,7 +77,7 @@ void draw_menu(Game *game)
   float title_spacing = game->menu.title_font.baseSize * 0.01f;
   Vector2 title_size =
       MeasureTextEx(game->menu.title_font, game->menu.title, game->menu.title_font.baseSize, title_spacing);
-  Vector2 title_pos = (Vector2){SCREEN_WIDTH / 2.0f - title_size.x / 2.0f, 150};
+  Vector2 title_pos = (Vector2){GetScreenWidth() / 2.0f - title_size.x / 2.0f, 150};
   DrawTextEx(game->menu.title_font, game->menu.title, title_pos, game->menu.title_font.baseSize, title_spacing,
              BUTTON_TITLE_COLOR);
 

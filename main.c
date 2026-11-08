@@ -9,7 +9,7 @@
 int main(void)
 {
 
-  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Stronghold");
+  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Northhold");
   SetExitKey(KEY_F8);
   SetTargetFPS(120);
 
