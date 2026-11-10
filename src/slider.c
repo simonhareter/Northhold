@@ -2,7 +2,6 @@
 #include "button.h"
 #include "config.h"
 #include "settings.h"
-#include <math.h>
 #include <raylib.h>
 #include <raymath.h>
 #include <stdbool.h>

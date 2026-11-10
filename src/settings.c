@@ -92,21 +92,15 @@ void init_settings(Game *game)
 // XDG_DATA_HOME = /home/.local/share/
 void create_settings(Game *game)
 {
-  const char *base = getenv("XDG_CONFIG_HOME");
+  const char *base = getenv("HOME");
 
-  if (base == NULL || base[0] == '\0')
-  {
-    const char *home = getenv("HOME");
-
-    if (home == NULL)
+  if (base == NULL)
     {
       TraceLog(LOG_ERROR, "HOME is not set");
       return;
     }
-    base = TextFormat("%s/.config", home);
-  }
 
-  const char *directory = TextFormat("%s/Northhold", base);
+  const char *directory = TextFormat("%s/.config/Northhold", base);
 
   if (MakeDirectory(directory) != 0 && !DirectoryExists(directory))
   {
@@ -140,9 +134,9 @@ void create_settings(Game *game)
 
 void load_settings(Game *game)
 {
-  const char *config_home = getenv("XDG_CONFIG_HOME");
+  const char *config_home = getenv("HOME");
 
-  FILE *fptr = fopen(TextFormat("%s/Northhold/settings.txt", config_home), "r");
+  FILE *fptr = fopen(TextFormat("%s/.config/Northhold/settings.txt", config_home), "r");
   int size = 25;
   char line[size];
 
@@ -299,9 +293,9 @@ void cancel_settings(Game *game)
 
 void save_settings(Game *game)
 {
-  const char *config_home = getenv("XDG_CONFIG_HOME");
+  const char *config_home = getenv("HOME");
 
-  FILE *fptr = fopen(TextFormat("%s/Northhold/settings.txt", config_home), "w");
+  FILE *fptr = fopen(TextFormat("%s/.config/Northhold/settings.txt", config_home), "w");
 
   if (fptr == NULL)
   {

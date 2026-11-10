@@ -5,28 +5,17 @@
 
 typedef enum
 {
-  TERRAIN_GRASS,
-  TERRAIN_WATER,
-  TERRAIN_STONE,
-  TERRAIN_SAND,
-  TERRAIN_ROAD,
-  TERRAIN_COUNT
-} TerrainType;
-
-typedef enum
-{
-  OBJECT_NONE,
-  OBJECT_TREE,
-  OBJECT_STONE,
-  OBJECT_IRON
-} ObjectType;
+  GRASS_ROAD_TILE_SET,
+  GRASS_WATER_TILE_SET,
+  TILE_SET_COUNT
+} TileSet; 
 
 typedef struct
 {
-  TerrainType terrain;
-  ObjectType object;
+  int tile_set_id;
+  int tile_id;
   bool walkable;
-} Tile;
+} MapTile;
 
 #define WORLD_WIDTH 128
 #define WORLD_HEIGHT 128
@@ -34,8 +23,9 @@ typedef struct
 
 typedef struct
 {
-  Tile tiles[WORLD_HEIGHT][WORLD_WIDTH];
+  MapTile tiles[WORLD_HEIGHT][WORLD_WIDTH];
 } World;
 
 void load_world(World *world);
+void generate_world(World *world);
 #endif

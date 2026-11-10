@@ -8,6 +8,6 @@
 
 void draw_game(Game *game);
 void draw_world(const World *world, const TileAssets *tile_assets);
-void draw_tile(Texture2D texture, int x, int y);
+void draw_tile(Texture2D texture, Rectangle rec, Vector2 pos, Color ting);
 
 #endif

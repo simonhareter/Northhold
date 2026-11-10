@@ -6,7 +6,7 @@
 
 typedef struct
 {
-  Texture2D terrain[TERRAIN_COUNT];
+  Texture2D tile_sets[TILE_SET_COUNT];
 } TileAssets;
 
 typedef struct

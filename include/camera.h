@@ -1,7 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "input.h"
 #include <raylib.h>
 
 #define CAMERA_SPEED 750.0f

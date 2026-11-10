@@ -9,11 +9,8 @@ void load_assets(Assets *assets)
 
 void load_tile_assets(TileAssets *tile_assets)
 {
-  tile_assets->terrain[TERRAIN_GRASS] = LoadTexture("../assets/tiles/grass.png");
-  tile_assets->terrain[TERRAIN_WATER] = LoadTexture("../assets/tiles/water.png");
-  tile_assets->terrain[TERRAIN_ROAD] = LoadTexture("../assets/tiles/road.png");
-  tile_assets->terrain[TERRAIN_STONE] = LoadTexture("../assets/tiles/stone.png");
-  tile_assets->terrain[TERRAIN_SAND] = LoadTexture("../assets/tiles/sand.png");
+  tile_assets->tile_sets[GRASS_ROAD_TILE_SET] = LoadTexture("../assets/tiles/tilesets/grass_road.png");
+  tile_assets->tile_sets[GRASS_WATER_TILE_SET] = LoadTexture("../assets/tiles/tilesets/grass_water.png");
 }
 
 void unload_assets(Assets *assets)
@@ -23,9 +20,9 @@ void unload_assets(Assets *assets)
 
 void unload_tile_assets(TileAssets *tile_assets)
 {
-  for (int i = 0; i < TERRAIN_COUNT; i++)
+  for (int i = 0; i < TILE_SET_COUNT; i++)
   {
-    UnloadTexture(tile_assets->terrain[i]);
+    UnloadTexture(tile_assets->tile_sets[i]);
   }
   TraceLog(LOG_INFO, "Unloaded tile assets successfully");
 }
