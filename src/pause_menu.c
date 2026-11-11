@@ -13,59 +13,83 @@ void init_pause_menu(Game *game)
 {
   PlayMusicStream(game->music.playing1_music);
 
-  float menu_box_width = 400;
-  float menu_box_height = 500;
-  Rectangle menu_box = {GetScreenWidth() / 2.0f - menu_box_width / 2.0f, GetScreenHeight() / 2.0f - menu_box_height / 2.0f,
-                        menu_box_width, menu_box_height};
+  const float menu_box_width = 400;
+  const float menu_box_height = 500;
+  const float menu_box_x = ((float)GetScreenWidth() / 2.0F) - (menu_box_width / 2.0F);
+  const float menu_box_y = ((float)GetScreenHeight() / 2.0F) - (menu_box_height / 2.0F);
 
-  float title_box_width = 200;
-  float title_box_height = 50;
-  Rectangle title_box = {GetScreenWidth() / 2.0f - title_box_width / 2.0f, menu_box.y - title_box_height / 2.0f,
-                         title_box_width, title_box_height};
+  Rectangle menu_box = {menu_box_x, menu_box_y, menu_box_width, menu_box_height};
+
+  const float title_box_width = 200;
+  const float title_box_height = 50;
+  const float title_box_x = ((float)GetScreenWidth() / 2.0F) - (title_box_width / 2.0F);
+  const float title_box_y = menu_box.y - (title_box_height / 2.0F);
+
+  Rectangle title_box = {title_box_x, title_box_y, title_box_width, title_box_height};
 
   Rectangle ui_elements[PAUSE_MENU_UI_ELEMENTS_COUNT] = {[PAUSE_MENU_BOX] = menu_box, [PAUSE_MENU_TITLE] = title_box};
   const char *ui_elements_text[PAUSE_MENU_UI_ELEMENTS_COUNT] = {"", "Game Menu"};
 
-  Color ui_elements_outline_color[PAUSE_MENU_UI_ELEMENTS_COUNT] = {Fade(BUTTON_OUTLINE_COLOR, BOX_OPACITY),
-                                                                   BUTTON_OUTLINE_COLOR};
-  Color ui_elements_color[PAUSE_MENU_UI_ELEMENTS_COUNT] = {Fade(BLACK, BOX_OPACITY), BUTTON_TITLE_COLOR};
+  Color ui_elements_outline_color[PAUSE_MENU_UI_ELEMENTS_COUNT] = {
+      Fade(BUTTON_OUTLINE_COLOR, BOX_OPACITY),
+      BUTTON_OUTLINE_COLOR,
+  };
+
+  Color ui_elements_color[PAUSE_MENU_UI_ELEMENTS_COUNT] = {
+      Fade(BLACK, BOX_OPACITY),
+      BUTTON_TITLE_COLOR,
+  };
 
   for (int i = 0; i < PAUSE_MENU_UI_ELEMENTS_COUNT; i++)
   {
     float roundness = i == BOX ? MENU_ROUNDNESS : BUTTON_ROUNDNESS;
 
-    Rectangle outline = {ui_elements[i].x - BUTTON_OUTLINE_THICKNESS, ui_elements[i].y - BUTTON_OUTLINE_THICKNESS,
-                         ui_elements[i].width + BUTTON_OUTLINE_THICKNESS * 2,
-                         ui_elements[i].height + BUTTON_OUTLINE_THICKNESS * 2};
+    Rectangle outline = {
+        ui_elements[i].x - BUTTON_OUTLINE_THICKNESS,
+        ui_elements[i].y - BUTTON_OUTLINE_THICKNESS,
+        ui_elements[i].width + (BUTTON_OUTLINE_THICKNESS * 2),
+        ui_elements[i].height + (BUTTON_OUTLINE_THICKNESS * 2),
+    };
 
-    game->pause_menu.ui_elements[i] = (Button){outline,
-                                               ui_elements[i],
-                                               ui_elements_text[i],
-                                               false,
-                                               ui_elements_outline_color[i],
-                                               ui_elements_color[i],
-                                               BUTTON_COLOR_HOVERED,
-                                               roundness};
+    game->pause_menu.ui_elements[i] = (Button){
+        outline,
+        ui_elements[i],
+        ui_elements_text[i],
+        false,
+        ui_elements_outline_color[i],
+        ui_elements_color[i],
+        BUTTON_COLOR_HOVERED,
+        roundness,
+    };
   }
 
-  float rec_width = 300;
-  float rec_height = 50;
-  float rec_pos_x = GetScreenWidth() / 2.0f - rec_width / 2.0f;
-  float rec_pos_y = GetScreenHeight() / 2.0f - menu_box_height / 2.0f + rec_height * 1.5f;
+  const float rec_width = 300;
+  const float rec_height = 50;
+  const float rec_pos_x = ((float)GetScreenWidth() / 2.0F) - (rec_width / 2.0F);
+  const float rec_pos_y = ((float)GetScreenHeight() / 2.0F) - (menu_box_height / 2.0F) + (rec_height * 1.5F);
 
   const char *button_names[PAUSE_MENU_COUNT] = {"Resume", "Save", "Settings", "Exit"};
 
   for (int i = 0; i < PAUSE_MENU_COUNT; i++)
   {
-    Rectangle curr_outline = {rec_pos_x - BUTTON_OUTLINE_THICKNESS,
-                              rec_pos_y - BUTTON_OUTLINE_THICKNESS + rec_height * (i * 2),
-                              rec_width + BUTTON_OUTLINE_THICKNESS * 2, rec_height + BUTTON_OUTLINE_THICKNESS * 2};
+    Rectangle curr_outline = {
+        rec_pos_x - BUTTON_OUTLINE_THICKNESS,
+        rec_pos_y - BUTTON_OUTLINE_THICKNESS + (rec_height * ((float)i * 2)),
+        rec_width + (BUTTON_OUTLINE_THICKNESS * 2),
+        rec_height + (BUTTON_OUTLINE_THICKNESS * 2),
+    };
 
-    Rectangle curr_button_rec = {rec_pos_x, rec_pos_y + rec_height * (i * 2), rec_width, rec_height};
+    Rectangle curr_button_rec = {
+        rec_pos_x,
+        rec_pos_y + (rec_height * ((float)i * 2)),
+        rec_width,
+        rec_height,
+    };
 
-    game->pause_menu.buttons[i] =
-        (Button){curr_outline,         curr_button_rec, button_names[i],      false,
-                 BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_COLOR_HOVERED, BUTTON_ROUNDNESS};
+    game->pause_menu.buttons[i] = (Button){
+        curr_outline,         curr_button_rec, button_names[i],      false,
+        BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_COLOR_HOVERED, BUTTON_ROUNDNESS,
+    };
   }
 }
 
@@ -102,8 +126,9 @@ void draw_pause_menu(Game *game)
 {
   // BOX
   Font font = game->font;
-  float spacing = FONT_SIZE * 0.1;
-  float h_align = 0.5, v_align = 0.5;
+  const float spacing = FONT_SIZE * 0.1;
+  const float h_align = 0.5F;
+  const float v_align = 0.5F;
 
   // PAUSE MENU UI ELEMENTS
   for (int i = 0; i < PAUSE_MENU_UI_ELEMENTS_COUNT; i++)
@@ -115,9 +140,13 @@ void draw_pause_menu(Game *game)
 
     const char *title_text = game->pause_menu.ui_elements[i].text;
     Rectangle *title_rec = &game->pause_menu.ui_elements[i].rec;
+
     Vector2 title_size = MeasureTextEx(font, title_text, FONT_SIZE, spacing);
-    Vector2 title_pos = (Vector2){title_rec->x + Lerp(0.0f, title_rec->width - title_size.x, h_align),
-                                  title_rec->y + Lerp(0.0f, title_rec->height - title_size.y, v_align)};
+
+    Vector2 title_pos = (Vector2){
+        title_rec->x + Lerp(0.0F, title_rec->width - title_size.x, h_align),
+        title_rec->y + Lerp(0.0F, title_rec->height - title_size.y, v_align),
+    };
 
     DrawTextEx(font, title_text, title_pos, FONT_SIZE, spacing, BUTTON_TEXT_COLOR);
   }
@@ -140,8 +169,11 @@ void draw_pause_menu(Game *game)
     DrawRectangleRounded(*rec, button->roundness, BUTTON_SEGMENTS, button_color);
 
     Vector2 text_size = MeasureTextEx(font, text, FONT_SIZE, spacing);
-    Vector2 text_pos = (Vector2){rec->x + Lerp(0.0f, rec->width - text_size.x, h_align),
-                                 rec->y + Lerp(0.0f, rec->height - text_size.y, v_align)};
+
+    Vector2 text_pos = (Vector2){
+        rec->x + Lerp(0.0F, rec->width - text_size.x, h_align),
+        rec->y + Lerp(0.0F, rec->height - text_size.y, v_align),
+    };
 
     DrawTextEx(font, text, text_pos, FONT_SIZE, spacing, BUTTON_TEXT_COLOR);
   }

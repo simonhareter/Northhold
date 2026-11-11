@@ -1,6 +1,7 @@
 #include "audio.h"
 #include "game.h"
 #include <raylib.h>
+#include <raymath.h>
 
 void load_menu_music(Game *game)
 {
@@ -30,4 +31,12 @@ void unload_music(Game *game)
   UnloadMusicStream(game->music.playing1_music);
   CloseAudioDevice();
   TraceLog(LOG_INFO, "Unloaded audio device successfully");
+}
+
+void set_music_volume(GameMusic *game_music, int volume)
+{
+  float music_volume = Clamp(Normalize((float)volume, 0.0F, 100.0F), 0.0F, 100.0F);
+
+  SetMusicVolume(game_music->menu_music, music_volume);
+  SetMusicVolume(game_music->playing1_music, music_volume);
 }

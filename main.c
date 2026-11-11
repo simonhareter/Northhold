@@ -11,7 +11,7 @@ int main(void)
 
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Northhold");
   SetExitKey(KEY_F8);
-  SetTargetFPS(60);
+  SetTargetFPS(FPS);
 
   Game game;
   init_game(&game);

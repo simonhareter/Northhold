@@ -16,4 +16,5 @@ void load_playing_music(Game *game);
 void update_menu_music(Game *game);
 void update_playing_music(Game *game);
 void unload_music(Game *game);
+void set_music_volume(GameMusic *music, int volume);
 #endif

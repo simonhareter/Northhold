@@ -12,14 +12,14 @@ typedef enum
   PAUSE_MENU_SAVE,
   PAUSE_MENU_SETTINGS,
   PAUSE_MENU_EXIT,
-  PAUSE_MENU_COUNT
+  PAUSE_MENU_COUNT,
 } PauseMenuItem;
 
 typedef enum
 {
   PAUSE_MENU_BOX,
   PAUSE_MENU_TITLE,
-  PAUSE_MENU_UI_ELEMENTS_COUNT
+  PAUSE_MENU_UI_ELEMENTS_COUNT,
 } PauseMenuUiElements;
 
 typedef struct

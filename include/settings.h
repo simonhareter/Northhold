@@ -10,21 +10,21 @@ typedef struct Game Game;
 typedef enum
 {
   SETTINGS_MUSIC_VOLUME,
-  SETTINGS_COUNT
+  SETTINGS_COUNT,
 } SettingsItem;
 
 typedef enum
 {
   BOX,
   TITLE,
-  SETTINGS_UI_ELEMENTS_COUNT
+  SETTINGS_UI_ELEMENTS_COUNT,
 } SettingsUiElements;
 
 typedef enum
 {
   CANCEL,
   SAVE,
-  SETTINGS_BUTTON_COUNT
+  SETTINGS_BUTTON_COUNT,
 } SettingsButton;
 
 typedef struct

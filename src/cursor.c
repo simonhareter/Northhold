@@ -18,7 +18,7 @@ void update_cursor(bool is_hovering_interactive_element)
 
 bool is_mouse_over_button(Rectangle rec)
 {
-  Vector2 mouse_pos = {GetMouseX(), GetMouseY()};
+  Vector2 mouse_pos = {(float)GetMouseX(), (float)GetMouseY()};
   return CheckCollisionPointRec(mouse_pos, rec);
 }
 
@@ -31,10 +31,8 @@ bool is_mouse_over_any_button(Button *options, int size)
       options[i].is_hovered = true;
       return true;
     }
-    else
-    {
-      options[i].is_hovered = false;
-    }
+
+    options[i].is_hovered = false;
   }
   return false;
 }
@@ -53,7 +51,7 @@ int which_button_pressed(Button *options, int size)
 
 bool is_mouse_over_slider_knob(Rectangle knob)
 {
-  Vector2 mouse_pos = {GetMouseX(), GetMouseY()};
+  Vector2 mouse_pos = {(float)GetMouseX(), (float)GetMouseY()};
   return CheckCollisionPointRec(mouse_pos, knob);
 }
 

@@ -17,13 +17,13 @@ void init_menu(Game *game)
   game->overlay_state = OVERLAY_STATE_NONE;
   // game->menu.background = LoadTexture("../assets/title/background.png");
 
-  float menu_width = 300;
-  float menu_height = 250;
+  const float menu_width = 300;
+  const float menu_height = 250;
 
   float rec_width = menu_width;
-  float rec_height = 50;
-  float rec_pos_x = GetScreenWidth() / 2.0f - rec_width / 2.0f;
-  float rec_pos_y = GetScreenHeight() / 2.0f - menu_height / 2.0f;
+  const float rec_height = 50;
+  const float rec_pos_x = ((float)GetScreenWidth() / 2.0F) - (rec_width / 2.0F);
+  const float rec_pos_y = ((float)GetScreenHeight() / 2.0F) - (menu_height / 2.0F);
 
   float space_height = rec_height;
 
@@ -31,12 +31,24 @@ void init_menu(Game *game)
 
   for (int i = 0; i < MENU_ITEM_COUNT; i++)
   {
-    Rectangle curr_outline = {rec_pos_x - BUTTON_OUTLINE_THICKNESS,
-                              rec_pos_y - BUTTON_OUTLINE_THICKNESS + rec_height * i + space_height * i,
-                              rec_width + BUTTON_OUTLINE_THICKNESS * 2, rec_height + BUTTON_OUTLINE_THICKNESS * 2};
-    Rectangle curr_button_rec = {rec_pos_x, rec_pos_y + rec_height * i + space_height * i, rec_width, rec_height};
-    game->menu.options[i] = (Button){curr_outline,         curr_button_rec, button_names[i],      false,
-                                     BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_COLOR_HOVERED, BUTTON_ROUNDNESS};
+    Rectangle curr_outline = {
+        rec_pos_x - BUTTON_OUTLINE_THICKNESS,
+        rec_pos_y - BUTTON_OUTLINE_THICKNESS + (rec_height * (float)i) + (space_height * (float)i),
+        rec_width + (BUTTON_OUTLINE_THICKNESS * 2),
+        rec_height + (BUTTON_OUTLINE_THICKNESS * 2),
+    };
+
+    Rectangle curr_button_rec = {
+        rec_pos_x,
+        rec_pos_y + (rec_height * (float)i) + (space_height * (float)i),
+        rec_width,
+        rec_height,
+    };
+
+    game->menu.options[i] = (Button){
+        curr_outline,         curr_button_rec, button_names[i],      false,
+        BUTTON_OUTLINE_COLOR, BUTTON_COLOR,    BUTTON_COLOR_HOVERED, BUTTON_ROUNDNESS,
+    };
   }
 }
 
@@ -64,6 +76,8 @@ void update_menu(Game *game)
     case 3:
       game->should_exit = true;
       break;
+    default:
+      break;
   }
 }
 
@@ -72,13 +86,18 @@ void draw_menu(Game *game)
   DrawTexture(game->menu.background, 0, 0, WHITE);
 
   Font font = game->font;
-  float h_align = 0.5, v_align = 0.5;
+  const float h_align = 0.5F;
+  const float v_align = 0.5F;
+  const float title_spacing = (float)game->menu.title_font.baseSize * 0.01F;
 
-  float title_spacing = game->menu.title_font.baseSize * 0.01f;
   Vector2 title_size =
-      MeasureTextEx(game->menu.title_font, game->menu.title, game->menu.title_font.baseSize, title_spacing);
-  Vector2 title_pos = (Vector2){GetScreenWidth() / 2.0f - title_size.x / 2.0f, 150};
-  DrawTextEx(game->menu.title_font, game->menu.title, title_pos, game->menu.title_font.baseSize, title_spacing,
+      MeasureTextEx(game->menu.title_font, game->menu.title, (float)game->menu.title_font.baseSize, title_spacing);
+
+  const float title_x = ((float)GetScreenWidth() / 2.0F) - (title_size.x / 2.0F);
+  const float title_y = 150.0F;
+  Vector2 title_pos = (Vector2){title_x, title_y};
+
+  DrawTextEx(game->menu.title_font, game->menu.title, title_pos, (float)game->menu.title_font.baseSize, title_spacing,
              BUTTON_TITLE_COLOR);
 
   Button *options = game->menu.options;
@@ -100,8 +119,11 @@ void draw_menu(Game *game)
     DrawRectangleRounded(rec, BUTTON_ROUNDNESS, BUTTON_SEGMENTS, color);
 
     Vector2 text_size = MeasureTextEx(font, text, (float)FONT_SIZE, TEXT_SPACING);
-    Vector2 text_pos = (Vector2){rec.x + Lerp(0.0f, rec.width - text_size.x, h_align),
-                                 rec.y + Lerp(0.0f, rec.height - text_size.y, v_align)};
+
+    Vector2 text_pos = (Vector2){
+        rec.x + Lerp(0.0F, rec.width - text_size.x, h_align),
+        rec.y + Lerp(0.0F, rec.height - text_size.y, v_align),
+    };
 
     DrawTextEx(font, text, text_pos, FONT_SIZE, TEXT_SPACING, BUTTON_TEXT_COLOR);
   }

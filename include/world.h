@@ -7,8 +7,8 @@ typedef enum
 {
   GRASS_ROAD_TILE_SET,
   GRASS_WATER_TILE_SET,
-  TILE_SET_COUNT
-} TileSet; 
+  TILE_SET_COUNT,
+} TileSet;
 
 typedef struct
 {
@@ -17,9 +17,11 @@ typedef struct
   bool walkable;
 } MapTile;
 
-#define WORLD_WIDTH 128
-#define WORLD_HEIGHT 128
-#define TILE_SIZE 32
+#define WORLD_WIDTH     16
+#define WORLD_HEIGHT    16
+#define TILE_SIZE       32
+#define WORLD_WIDTH_PX  (WORLD_WIDTH * TILE_SIZE)
+#define WORLD_HEIGHT_PX (WORLD_HEIGHT * TILE_SIZE)
 
 typedef struct
 {

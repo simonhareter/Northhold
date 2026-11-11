@@ -13,7 +13,7 @@ typedef enum
   MENU_ITEM_LOAD,
   MENU_ITEM_SETTINGS,
   MENU_ITEM_EXIT,
-  MENU_ITEM_COUNT
+  MENU_ITEM_COUNT,
 } MenuItem;
 
 typedef struct

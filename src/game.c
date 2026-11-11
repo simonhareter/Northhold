@@ -1,6 +1,7 @@
 #include "game.h"
 #include "assets.h"
 #include "audio.h"
+#include "camera.h"
 #include "config.h"
 #include "cursor.h"
 #include "menu.h"
@@ -9,6 +10,7 @@
 #include "settings.h"
 #include "world.h"
 #include <raylib.h>
+#include <raymath.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -24,17 +26,13 @@ void init_game(Game *game)
 
   game->should_exit = false;
   game->state = GAME_STATE_MENU;
-  game->camera = (Camera2D){.target = {WORLD_WIDTH * TILE_SIZE / 2.0f, WORLD_HEIGHT * TILE_SIZE / 2.0f},
-                            .offset = {SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f},
-                            .rotation = 0.0f,
-                            .zoom = 1.5f};
 
+  init_camera(&game->camera);
   init_menu(game);
   init_settings(game);
   load_settings(game);
 
-  SetMusicVolume(game->music.menu_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
-  SetMusicVolume(game->music.playing1_music, game->settings.options[SETTINGS_MUSIC_VOLUME].value / 100.0f);
+  set_music_volume(&game->music, game->settings.options[SETTINGS_MUSIC_VOLUME].value);
 
   init_slider(&game->settings);
   init_pause_menu(game);

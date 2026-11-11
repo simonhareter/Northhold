@@ -8,16 +8,16 @@
 
 void init_slider(Settings *settings)
 {
-  float padding = 50;
-  float gap = 50;
+  const float padding = 50;
+  const float gap = 50;
 
-  float box_x = settings->ui_elements[BOX].rec.x;
-  float box_y = settings->ui_elements[BOX].rec.y;
-  float box_width = settings->ui_elements[0].rec.width;
+  const float box_x = settings->ui_elements[BOX].rec.x;
+  const float box_y = settings->ui_elements[BOX].rec.y;
+  const float box_width = settings->ui_elements[0].rec.width;
 
-  float rec_height = settings->ui_elements[TITLE].rec.height;
+  const float rec_height = settings->ui_elements[TITLE].rec.height;
 
-  float max_text_width = 0.0f;
+  float max_text_width = 0.0F;
 
   for (int i = 0; i < SETTINGS_COUNT; i++)
   {
@@ -32,27 +32,29 @@ void init_slider(Settings *settings)
   const char *value_example = "100";
   Vector2 value_size = MeasureTextEx(settings->font, value_example, SETTINGS_FONT_SIZE, TEXT_SPACING);
 
-  float slider_width = box_width - max_text_width - padding * 2 - gap * 2 - value_size.x;
+  float slider_width = box_width - max_text_width - (padding * 2) - (gap * 2) - value_size.x;
 
   float line_x = box_x + padding + max_text_width + gap;
 
   float line_height = 1;
 
-  float knob_width = 15, knob_height = 25;
+  const float knob_width = 15;
+  const float knob_height = 25;
 
   for (int i = 0; i < SETTINGS_COUNT; i++)
   {
     Setting *option = &settings->options[i];
 
-    float option_y = box_y + padding + rec_height * i;
     Vector2 text_size = MeasureTextEx(settings->font, option->name, SETTINGS_FONT_SIZE, TEXT_SPACING);
-    float center_y = option_y + text_size.y / 2.0f;
 
-    float knob_percentage = option->value / 100.0f;
-    float knob_x = line_x + knob_percentage * (slider_width - knob_width);
+    const float option_y = box_y + padding + (rec_height * (float)i);
+    const float center_y = option_y + (text_size.y / 2.0F);
 
-    Rectangle line = {line_x, center_y - line_height / 2, slider_width, line_height};
-    Rectangle knob = {knob_x, center_y - knob_height / 2, knob_width, knob_height};
+    float knob_percentage = (float)option->value / 100.0F;
+    float knob_x = line_x + (knob_percentage * (slider_width - knob_width));
+
+    Rectangle line = {line_x, center_y - (line_height / 2), slider_width, line_height};
+    Rectangle knob = {knob_x, center_y - (knob_height / 2), knob_width, knob_height};
 
     option->slider = (Slider){line, knob, false};
   }
@@ -76,7 +78,7 @@ void update_slider(Settings *settings)
     {
       int mouse_x = GetMouseX();
 
-      slider->knob.x = mouse_x - slider->knob.width / 2;
+      slider->knob.x = (float)mouse_x - (slider->knob.width / 2);
 
       float min_x = slider->line.x;
       float max_x = slider->line.x + slider->line.width - slider->knob.width;
@@ -85,9 +87,11 @@ void update_slider(Settings *settings)
 
       // update option value
       float travel_distance = slider->line.width - slider->knob.width;
-      option->value = (int)roundf((slider->knob.x - slider->line.x) / travel_distance * 100);
+      const int PERCENTAGE_SCALE = 100;
 
-      slider->knob.x = slider->line.x + (option->value / 100.0f) * travel_distance;
+      option->value = (int)roundf(((slider->knob.x - slider->line.x) / travel_distance) * (float)PERCENTAGE_SCALE);
+
+      slider->knob.x = slider->line.x + (((float)option->value / 100.0F) * travel_distance);
     }
 
     if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
