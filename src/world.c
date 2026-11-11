@@ -5,7 +5,7 @@ void load_world(World *world)
 {
     FILE *fptr;
 
-    fptr = fopen("../assets/maps/map1.txt", "r");
+    fptr = fopen("assets/maps/map1.txt", "r");
 
     if (fptr == NULL)
     {
