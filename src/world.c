@@ -38,3 +38,20 @@ void load_world(World *world)
     }
     fclose(fptr);
 }
+
+void generate_world(World *world)
+{
+    const
+}
+
+void wave_function_collapse(World *world)
+{
+    // 1: Randomly choose a tile of the map and randomly select one of the 16 possible tile versions
+    // 2: Now the tiles neighbours lose entropy (since only a certain amount of tiles fit to a specific side of the
+    // first tile) Pick the direction with the lowest entropy.
+    // If for instance the tile north of the first tile has 3 options, pick one at random. Once the tile
+    // collapsed to a specific tile you know collapse that tile. rinse and repeat.
+    // 3: With the dual grid 4x4 tileset, each tile has a predetermined amount of possible tile neighbors for all of its
+    // four sides. Check the tileset.png in assets to see.
+    //
+}

@@ -68,20 +68,22 @@ void init_pause_menu(Game *game)
     const float rec_pos_x = ((float)GetScreenWidth() / 2.0F) - (rec_width / 2.0F);
     const float rec_pos_y = ((float)GetScreenHeight() / 2.0F) - (menu_box_height / 2.0F) + (rec_height * 1.5F);
 
+    const float space_height = rec_height;
+
     const char *button_names[PAUSE_MENU_COUNT] = {"Resume", "Save", "Settings", "Exit"};
 
     for (int i = 0; i < PAUSE_MENU_COUNT; i++)
     {
         Rectangle curr_outline = {
             rec_pos_x - BUTTON_OUTLINE_THICKNESS,
-            rec_pos_y - BUTTON_OUTLINE_THICKNESS + (rec_height * ((float)i * 2)),
+            rec_pos_y - BUTTON_OUTLINE_THICKNESS + (rec_height * (float)i) + (space_height * (float)i),
             rec_width + (BUTTON_OUTLINE_THICKNESS * 2),
             rec_height + (BUTTON_OUTLINE_THICKNESS * 2),
         };
 
         Rectangle curr_button_rec = {
             rec_pos_x,
-            rec_pos_y + (rec_height * ((float)i * 2)),
+            rec_pos_y + (rec_height * (float)i) + (space_height * (float)i),
             rec_width,
             rec_height,
         };

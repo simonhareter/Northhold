@@ -30,4 +30,5 @@ typedef struct
 
 void load_world(World *world);
 void generate_world(World *world);
+void wave_function_collapse(World *world);
 #endif
