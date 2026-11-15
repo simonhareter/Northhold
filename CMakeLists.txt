@@ -71,3 +71,9 @@ if (APPLE)
         "-framework OpenGL"
     )
 endif()
+
+
+#Generate ninja build files
+#cmake -S . -B build -G Ninja
+#call ninja to build
+#cmake --build build
