@@ -39,6 +39,9 @@ void init_game(Game *game)
 
     load_world(&game->world);
     load_assets(&game->assets);
+
+    compute_tiles_adjacency_array(&game->world);
+    print_adjacency_array(&game->world);
 }
 
 void update_game(Game *game)

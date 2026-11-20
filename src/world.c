@@ -1,6 +1,7 @@
 #include "world.h"
 #include <raylib.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 
 // loads a predetermined map.txt
@@ -90,6 +91,24 @@ void compute_tiles_adjacency_array(World *world)
                     (bool)(tiles[tile_id].corners[corner_rel[0]] == tiles[comparison_tile_id].corners[corner_rel[2]] &&
                            tiles[tile_id].corners[corner_rel[1]] == tiles[comparison_tile_id].corners[corner_rel[3]]);
             }
+        }
+    }
+}
+
+// for debugging purposes
+void print_adjacency_array(World *world)
+{
+    for(size_t tile = 0; tile < sizeof(world->tiles_adjacency_array) / sizeof(world->tiles_adjacency_array[0]); tile++)
+    {
+        printf("Tile %d : \n", (int)tile);
+        for(int dir = 0; dir < CARDINAL_DIRECTION_COUNT; dir++)
+        {
+            printf("Dir %d: ", dir);
+            for(int tile_id = 0; tile_id < TILE_COUNT; tile_id++)
+            {
+                printf("%d, ", (int)world->tiles_adjacency_array[tile][dir][tile_id]);
+            }
+            printf("\n");
         }
     }
 }

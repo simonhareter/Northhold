@@ -62,12 +62,13 @@ typedef struct
 typedef struct
 {
   MapTile tiles[WORLD_HEIGHT][WORLD_WIDTH];
-  bool tiles_adjacency_array[TILES_PER_TILE_SET * TILE_SET_COUNT][CARDINAL_DIRECTION_COUNT][TILE_COUNT]
+  bool tiles_adjacency_array[TILE_COUNT][CARDINAL_DIRECTION_COUNT][TILE_COUNT];
 } World;
 
 void load_world(World *world);
 void generate_world(World *world);
 void compute_tiles_adjacency_array(World *world);
+void print_adjacency_array(World *world);
 void wave_function_collapse(World *world);
 void propagate_constraints(World *world);
 void select_first_map_tile(World *world, int tile_set_it, bool walkable);
